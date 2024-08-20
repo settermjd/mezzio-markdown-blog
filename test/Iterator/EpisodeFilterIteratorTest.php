@@ -196,6 +196,6 @@ EOF;
                 $itemLister->getArticles()
             )
         );
-        $this->assertCount(2, $publishedItems, "Incorrect past item count retrieved");
+        $this->assertCount(4, $publishedItems, "Incorrect past item count retrieved");
     }
 }

@@ -94,17 +94,6 @@ class ItemListerFilesystem implements ItemListerInterface
     }
 
     /**
-     * Returns the directory being searched by the episode lister.
-     */
-    public function getDataDirectory(): string
-    {
-        return $this
-            ->episodeIterator
-            ->getInnerIterator()
-            ->getPath();
-    }
-
-    /**
      * @return BlogArticle|string
      */
     public function getArticle($episodeSlug)
