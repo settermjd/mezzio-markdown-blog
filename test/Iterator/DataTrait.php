@@ -4,26 +4,17 @@ declare(strict_types=1);
 
 namespace MarkdownBlogTest\Iterator;
 
-use ArrayIterator;
 use DateInterval;
 use DateTime;
-use MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
-use MarkdownBlog\Items\Adapter\ItemListerFilesystem;
-use MarkdownBlog\Iterator\FilterPostByCategoryIterator;
-use Mni\FrontYAML\Parser;
 use org\bovigo\vfs\vfsStream;
-use Override;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 
 use function sprintf;
 
-final class FilterPostByCategoryIteratorTest extends TestCase
+trait DataTrait
 {
     private array $structure;
 
-    #[Override]
-    protected function setUp(): void
+    public function setupArticleData(): void
     {
         $item001Content = <<<EOF
 ---
@@ -33,8 +24,8 @@ synopsis: In this, the first item, Matt talks about what lead to the podcast get
 title: Getting Underway, The E-Myth Revisited, and Networking For Success
 image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0001.mp3
 tags:
-  - "Testing"
-  - "Slim Framework"
+  - "PHP"
+  - "Docker"
 categories:
   - "Software Development"
 ---
@@ -61,10 +52,9 @@ synopsis: In this blogArticle, I have a fireside chat with internationally recog
 image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0002.mp3
 tags:
   - "PHP"
-  - "Ruby"
-  - "Laravel"
+  - "Docker"
 categories:
-  - "Public Speaking"
+  - "Software Development"
 ---
 ### Synopsis
 
@@ -98,7 +88,7 @@ title: The Mythical Man Month with Paul M. Jones & Speaking Engagements
 image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0002.mp3
 tags:
   - "PHP"
-  - "Containers"
+  - "Docker"
 categories:
   - "Software Development"
 ---
@@ -157,47 +147,5 @@ EOF;
             ],
         ];
         vfsStream::setup('root', null, $this->structure);
-    }
-
-    #[DataProvider('filterByCategoryDataProvider')]
-    public function testCanFilterPostsByCategory(string $category, int $postCount): void
-    {
-        $this->setUp();
-
-        vfsStream::setup('root', null, $this->structure);
-
-        $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister                    = new ItemListerFilesystem(
-            vfsStream::url('root/posts'),
-            new Parser(),
-            $blogArticleInputFilterFactory()
-        );
-        $posts                         = new FilterPostByCategoryIterator(
-            new ArrayIterator($itemLister->getArticles()),
-            $category
-        );
-        $this->assertCount($postCount, $posts);
-    }
-
-  /**
-   * @return (int|string)[][]
-   * @psalm-return list{list{'Podcasts', 0}, list{'Software Development', 3}, list{'Public Speaking', 1}}
-   */
-    public static function filterByCategoryDataProvider(): array
-    {
-        return [
-            [
-                'Podcasts',
-                0,
-            ],
-            [
-                'Software Development',
-                3,
-            ],
-            [
-                'Public Speaking',
-                1,
-            ],
-        ];
     }
 }
