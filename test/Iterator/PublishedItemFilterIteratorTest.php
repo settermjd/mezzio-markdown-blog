@@ -2,24 +2,22 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlogTest\Items\Adapter;
+namespace MarkdownBlogTest\Iterator;
 
+use ArrayIterator;
 use DateInterval;
 use DateTime;
 use MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use MarkdownBlog\Items\Adapter\ItemListerFilesystem;
+use MarkdownBlog\Iterator\PublishedItemFilterIterator;
 use Mni\FrontYAML\Parser;
 use org\bovigo\vfs\vfsStream;
 use Override;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 
 use function sprintf;
 
-/**
- * @coversDefaultClass \MarkdownBlog\Items\Adapter\ItemListerFilesystem
- */
-final class ItemListerFilesystemTest extends TestCase
+final class PublishedItemFilterIteratorTest extends TestCase
 {
     private array $structure;
 
@@ -34,10 +32,10 @@ title: Getting Underway, <a href="">The E-Myth Revisited</a>, and Networking For
 image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0001.mp3
 synopsis: In this, the first item, Matt talks about what lead to the podcast getting started who motivated him and inspired him to get started. After that, he discusses a fantastic book that all freelancers should read.
 tags:
-  - "PHP"
-  - "Docker"
+  - "E-Myth"
+  - "Books"
 categories:
-  - "Software Development"
+  - "Networking"
 ---
 ### Synopsis
 
@@ -61,10 +59,8 @@ title: The Mythical Man Month with Paul M. Jones & Speaking Engagements
 image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0002.mp3
 synopsis: In this item, I have a fireside chat with internationally recognized PHP expert, and all around good fella Paul M. Jones, about one of his all-time favorite books, The Mythical Man Month.
 tags:
-  - "PHP"
   - "Paul M. Jones"
   - "The Mythical Man Month"
-  - "Solving the N+1 Problem in PHP"
 categories:
   - "Public Speaking"
 ---
@@ -162,92 +158,19 @@ EOF;
         vfsStream::setup('root', null, $this->structure);
     }
 
-    public function testCanRetrieveASortedUniqueListOfCategories(): void
+    public function testCanFindPublishedPosts(): void
     {
-        $this->setUp();
-
-        vfsStream::setup('root', null, $this->structure);
-
         $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
         $itemLister                    = new ItemListerFilesystem(
             vfsStream::url('root/posts'),
             new Parser(),
             $blogArticleInputFilterFactory(),
-            null,
-            null
         );
 
-        $categories = $itemLister->getCategories();
-        $this->assertCount(2, $categories);
-        $this->assertSame(
-            [
-                'Public Speaking',
-                'Software Development',
-            ],
-            $categories,
-        );
-    }
-
-    public function testCanRetrieveASortedUniqueListOfTags(): void
-    {
-        $this->setUp();
-
-        vfsStream::setup('root', null, $this->structure);
-
-        $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister                    = new ItemListerFilesystem(
-            vfsStream::url('root/posts'),
-            new Parser(),
-            $blogArticleInputFilterFactory(),
-            null,
-            null
+        $articles = new PublishedItemFilterIterator(
+            new ArrayIterator($itemLister->getArticles())
         );
 
-        $tags = $itemLister->getTags();
-        $this->assertCount(6, $tags);
-        $this->assertEqualsCanonicalizing(
-            [
-                "Docker",
-                "PHP",
-                "PHP World",
-                "Paul M. Jones",
-                "Solving the N+1 Problem in PHP",
-                "The Mythical Man Month",
-            ],
-            $tags,
-        );
-    }
-
-    public function testDataIsProperlyValidatedAndFiltered(): void
-    {
-        $this->setUp();
-
-        vfsStream::setup('root', null, $this->structure);
-
-        /** @var LoggerInterface&MockObject $log */
-        $log = $this->createMock(LoggerInterface::class);
-        $log
-            ->expects($this->once())
-            ->method('error')
-            ->with(
-                'Could not instantiate blog item for file vfs://root/posts/item-0001.md.',
-                [
-                    'publishDate' => [
-                        'regexNotMatch' => "The input does not match against pattern '/\d{4}\-\d{2}\-\d{2}|(\d{2}\.){2}\d{4}/'",
-                    ],
-                ]
-            );
-
-        $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister                    = new ItemListerFilesystem(
-            vfsStream::url('root/posts'),
-            new Parser(),
-            $blogArticleInputFilterFactory(),
-            null,
-            $log
-        );
-
-        $articles = $itemLister->getArticles();
         $this->assertCount(3, $articles);
     }
 }

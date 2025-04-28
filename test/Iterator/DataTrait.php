@@ -2,37 +2,27 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlogTest\Items\Adapter;
+namespace MarkdownBlogTest\Iterator;
 
 use DateInterval;
 use DateTime;
-use MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
-use MarkdownBlog\Items\Adapter\ItemListerFilesystem;
-use Mni\FrontYAML\Parser;
 use org\bovigo\vfs\vfsStream;
-use Override;
-use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 
 use function sprintf;
 
-/**
- * @coversDefaultClass \MarkdownBlog\Items\Adapter\ItemListerFilesystem
- */
-final class ItemListerFilesystemTest extends TestCase
+trait DataTrait
 {
     private array $structure;
 
-    #[Override]
-    protected function setUp(): void
+    public function setupArticleData(): void
     {
         $item001Content = <<<EOF
 ---
-publish_date: "2015"
+publish_date: 13.07.2015
 slug: item-0001
-title: Getting Underway, <a href="">The E-Myth Revisited</a>, and Networking For Success
-image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0001.mp3
 synopsis: In this, the first item, Matt talks about what lead to the podcast getting started who motivated him and inspired him to get started. After that, he discusses a fantastic book that all freelancers should read.
+title: Getting Underway, The E-Myth Revisited, and Networking For Success
+image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0001.mp3
 tags:
   - "PHP"
   - "Docker"
@@ -58,15 +48,13 @@ EOF;
 publish_date: 03.08.2015
 slug: item-0002
 title: The Mythical Man Month with Paul M. Jones & Speaking Engagements
+synopsis: In this blogArticle, I have a fireside chat with internationally recognized PHP expert Paul M. Jones about one of his all-time favorite books, The Mythical Man Month.
 image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0002.mp3
-synopsis: In this item, I have a fireside chat with internationally recognized PHP expert, and all around good fella Paul M. Jones, about one of his all-time favorite books, The Mythical Man Month.
 tags:
   - "PHP"
-  - "Paul M. Jones"
-  - "The Mythical Man Month"
-  - "Solving the N+1 Problem in PHP"
+  - "Docker"
 categories:
-  - "Public Speaking"
+  - "Software Development"
 ---
 ### Synopsis
 
@@ -95,13 +83,12 @@ EOF;
 ---
 publish_date: %s
 slug: item-0003
+synopsis: In this blogArticle, I have a fireside chat with internationally recognized PHP expert Paul M. Jones about one of his all-time favorite books, The Mythical Man Month.
 title: The Mythical Man Month with Paul M. Jones & Speaking Engagements
 image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0002.mp3
-synopsis: In this item, I have a fireside chat with internationally recognized PHP expert, and all around good fella Paul M. Jones, about one of his all-time favorite books, The Mythical Man Month.
 tags:
   - "PHP"
   - "Docker"
-  - "PHP World"
 categories:
   - "Software Development"
 ---
@@ -126,8 +113,8 @@ EOF;
 publish_date: %s
 slug: item-0004
 title: Wisdom as a Service World Tour and Human Skills - with Yitzchok Willroth
-image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0004.mp3
 synopsis: In this item, I have a fireside chat with Yitzchok Willroth, the one and only coderabbi, about a his Wisdom as a Service World Tour.
+image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0004.mp3
 tags:
   - "PHP"
   - "Docker"
@@ -160,94 +147,5 @@ EOF;
             ],
         ];
         vfsStream::setup('root', null, $this->structure);
-    }
-
-    public function testCanRetrieveASortedUniqueListOfCategories(): void
-    {
-        $this->setUp();
-
-        vfsStream::setup('root', null, $this->structure);
-
-        $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister                    = new ItemListerFilesystem(
-            vfsStream::url('root/posts'),
-            new Parser(),
-            $blogArticleInputFilterFactory(),
-            null,
-            null
-        );
-
-        $categories = $itemLister->getCategories();
-        $this->assertCount(2, $categories);
-        $this->assertSame(
-            [
-                'Public Speaking',
-                'Software Development',
-            ],
-            $categories,
-        );
-    }
-
-    public function testCanRetrieveASortedUniqueListOfTags(): void
-    {
-        $this->setUp();
-
-        vfsStream::setup('root', null, $this->structure);
-
-        $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister                    = new ItemListerFilesystem(
-            vfsStream::url('root/posts'),
-            new Parser(),
-            $blogArticleInputFilterFactory(),
-            null,
-            null
-        );
-
-        $tags = $itemLister->getTags();
-        $this->assertCount(6, $tags);
-        $this->assertEqualsCanonicalizing(
-            [
-                "Docker",
-                "PHP",
-                "PHP World",
-                "Paul M. Jones",
-                "Solving the N+1 Problem in PHP",
-                "The Mythical Man Month",
-            ],
-            $tags,
-        );
-    }
-
-    public function testDataIsProperlyValidatedAndFiltered(): void
-    {
-        $this->setUp();
-
-        vfsStream::setup('root', null, $this->structure);
-
-        /** @var LoggerInterface&MockObject $log */
-        $log = $this->createMock(LoggerInterface::class);
-        $log
-            ->expects($this->once())
-            ->method('error')
-            ->with(
-                'Could not instantiate blog item for file vfs://root/posts/item-0001.md.',
-                [
-                    'publishDate' => [
-                        'regexNotMatch' => "The input does not match against pattern '/\d{4}\-\d{2}\-\d{2}|(\d{2}\.){2}\d{4}/'",
-                    ],
-                ]
-            );
-
-        $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister                    = new ItemListerFilesystem(
-            vfsStream::url('root/posts'),
-            new Parser(),
-            $blogArticleInputFilterFactory(),
-            null,
-            $log
-        );
-
-        $articles = $itemLister->getArticles();
-        $this->assertCount(3, $articles);
     }
 }

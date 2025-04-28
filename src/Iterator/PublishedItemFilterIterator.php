@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace MarkdownBlog\Iterator;
 
+use Countable;
 use DateTime;
 use Exception;
+use FilterIterator;
 use Iterator;
 use MarkdownBlog\Entity\BlogArticle;
+use Override;
 
-/**
- * Class PublishedItemFilterIterator.
- *
- * @author Matthew Setter <matthew@matthewsetter.com>
- * @copyright 2015 Matthew Setter
- */
-class PublishedItemFilterIterator extends \FilterIterator implements \Countable
+use function iterator_count;
+
+final class PublishedItemFilterIterator extends FilterIterator implements Countable
 {
     public function __construct(Iterator $iterator)
     {
@@ -28,12 +27,14 @@ class PublishedItemFilterIterator extends \FilterIterator implements \Countable
      *
      * @throws Exception
      */
+    #[Override]
     public function accept(): bool
     {
-        /** @var BlogArticle $episode */
-        $episode = $this->getInnerIterator()->current();
+        $episode = $this->getInnerIterator()?->current();
 
-        return $episode->getPublishDate() <= new DateTime();
+        return $episode instanceof BlogArticle
+            ? $episode->getPublishDate() <= new DateTime()
+            : false;
     }
 
     public function count(): int

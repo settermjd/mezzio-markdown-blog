@@ -7,13 +7,15 @@ namespace MarkdownBlog\Items;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use MarkdownBlog\Items\Adapter\ItemListerFilesystem;
-use Mni\FrontYAML\Parser;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
 
-class ItemListerFactory
+use function array_key_exists;
+use function sprintf;
+
+final class ItemListerFactory
 {
     /**
      * Build an ItemListerInterface object based on a configuration array.
@@ -21,18 +23,18 @@ class ItemListerFactory
      * The array has to have the following structure:
      *
      * 'blog' => [
-     *   'type' => 'filesystem',
-     *   'path' => __DIR__ . '/../../data/posts',
-     *   'parser' => Parser::class,
+     * 'type' => 'filesystem',
+     * 'path' => __DIR__ . '/../../data/posts',
+     * 'parser' => Parser::class,
      * ]
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container): ItemListerInterface
+    public function __invoke(ContainerInterface $container): ItemListerFilesystem
     {
-        $config = $container->get('config');
-        if (empty($config['blog'])) {
+        $config = (array) $container->get('config');
+        if ($config === [] || ! array_key_exists('blog', $config) || $config['blog'] === []) {
             throw new InvalidServiceException('Blog configuration was invalid.');
         }
         $blogConfig = $config['blog'];
@@ -61,7 +63,7 @@ class ItemListerFactory
                     $blogConfig['path'],
                     $parser,
                     $inputFilter,
-                    (array_key_exists('cache', $blogConfig)) ? $blogConfig['cache'] : '',
+                    array_key_exists('cache', $blogConfig) ? $blogConfig['cache'] : '',
                     $logger ?? null
                 );
         }

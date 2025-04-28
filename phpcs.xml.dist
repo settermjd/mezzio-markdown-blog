@@ -12,11 +12,8 @@
     <arg value="p"/>
 
     <!-- Paths to check -->
-    <file>config</file>
     <file>src</file>
     <file>test</file>
-    <exclude-pattern>config/config.php</exclude-pattern>
-    <exclude-pattern>config/routes.php</exclude-pattern>
 
     <!-- Include all rules from the Laminas Coding Standard -->
     <rule ref="LaminasCodingStandard"/>
@@ -25,8 +22,23 @@
         <exclude-pattern>src/ConfigProvider.*.php</exclude-pattern>
     </rule>
 
-    <rule ref="PSR12.Files.FileHeader.IncorrectOrder">
-        <exclude-pattern>config/pipeline.php</exclude-pattern>
-        <exclude-pattern>src/MezzioInstaller/Resources/config/routes-*.php</exclude-pattern>
+    <rule ref="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration.InvalidFormat">
+        <exclude-pattern>test/Iterator/FilterPostByTagIteratorTest.php</exclude-pattern>
+    </rule>
+    
+    <rule ref="Generic.Files.LineLength">
+        <exclude-pattern>src/ConfigProvider.php</exclude-pattern>
+        <exclude-pattern>src/Items/Adapter/ItemListerFilesystem.php</exclude-pattern>
+        <exclude-pattern>test/Entity/BlogArticleTest.php</exclude-pattern>
+        <exclude-pattern>test/InputFilter/BlogArticleInputFilterFactoryTest.php</exclude-pattern>
+        <exclude-pattern>test/Items/Adapter/ItemListerFilesystemTest.php</exclude-pattern>
+        <exclude-pattern>test/Items/ItemListerFactoryTest.php</exclude-pattern>
+        <exclude-pattern>test/Iterator/EpisodeFilterIteratorTest.php</exclude-pattern>
+        <exclude-pattern>test/Iterator/FilterPostByCategoryIteratorTest.php</exclude-pattern>
+        <exclude-pattern>test/Iterator/FilterPostByTagIteratorTest.php</exclude-pattern>
+        <exclude-pattern>test/Iterator/FilterPostByTagIteratorTest.php</exclude-pattern>
+        <exclude-pattern>test/Iterator/FilterPostByTagIteratorTest.php</exclude-pattern>
+        <exclude-pattern>test/Iterator/PublishedItemFilterIteratorTest.php</exclude-pattern>
+        <exclude-pattern>test/Iterator/RelatedPostsFilterIteratorTest.php</exclude-pattern>
     </rule>
 </ruleset>

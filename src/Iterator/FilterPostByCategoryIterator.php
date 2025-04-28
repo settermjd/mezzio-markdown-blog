@@ -7,8 +7,14 @@ namespace MarkdownBlog\Iterator;
 use FilterIterator;
 use Iterator;
 use MarkdownBlog\Entity\BlogArticle;
+use Override;
 
-class FilterPostByCategoryIterator extends FilterIterator
+use function array_filter;
+use function array_map;
+use function in_array;
+use function strtolower;
+
+final class FilterPostByCategoryIterator extends FilterIterator
 {
     private string $category;
 
@@ -23,10 +29,13 @@ class FilterPostByCategoryIterator extends FilterIterator
      * Filter out articles that don't have a matching category.
      * A lowercase comparison is made to reduce the likelihood of false negative matches.
      */
+    #[Override]
     public function accept(): bool
     {
-        /** @var BlogArticle $episode */
-        $episode = $this->getInnerIterator()->current();
+        $episode = $this->getInnerIterator()?->current();
+        if (! $episode instanceof BlogArticle) {
+            return false;
+        }
 
         // Filter out empty/null entries, which will break array_map's use of strtolower
         $categories = array_filter($episode->getCategories());
