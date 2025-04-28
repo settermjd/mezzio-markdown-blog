@@ -1,22 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MarkdownBlogTest\Iterator;
 
 use ArrayIterator;
+use DateInterval;
+use DateTime;
 use MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use MarkdownBlog\Items\Adapter\ItemListerFilesystem;
 use MarkdownBlog\Iterator\FilterPostByCategoryIterator;
-use MarkdownBlog\Iterator\FilterPostByTagIterator;
 use Mni\FrontYAML\Parser;
 use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
+use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-class FilterPostByCategoryIteratorTest extends TestCase
-{
-    private $root;
-    private $structure;
+use function sprintf;
 
+final class FilterPostByCategoryIteratorTest extends TestCase
+{
+    private array $structure;
+
+    #[Override]
     protected function setUp(): void
     {
         $item001Content = <<<EOF
@@ -109,7 +115,7 @@ I've also got updates on what's been happening for me personally in my freelanci
 - [Paul M. Jones](http://paul-m-jones.com/)
 EOF;
 
-        $futureDate = (new \DateTime())->add(new \DateInterval('P3D'))->format('d.m.Y');
+        $futureDate     = (new DateTime())->add(new DateInterval('P3D'))->format('d.m.Y');
         $item003Content = sprintf($item003Content, $futureDate);
 
         $item004Content = <<<EOF
@@ -139,10 +145,9 @@ We talk about what it's like to run the tour, the time involved, the energy requ
 - [NYPHP User Group](http://nyphp.org/)
 EOF;
 
-        $futureDate = (new \DateTime())->add(new \DateInterval('P5D'))->format('d.m.Y');
+        $futureDate     = (new DateTime())->add(new DateInterval('P5D'))->format('d.m.Y');
         $item004Content = sprintf($item004Content, $futureDate);
 
-        $this->root = vfsStream::setup();
         $this->structure = [
             'posts' => [
                 'item-0001.md' => $item001Content,
@@ -151,23 +156,23 @@ EOF;
                 'item-0004.md' => $item004Content,
             ],
         ];
+        vfsStream::setup('root', null, $this->structure);
     }
 
-    /**
-     * @dataProvider filterByCategoryDataProvider
-     */
-    public function testCanFilterPostsByCategory(string $category, int $postCount)
+    #[DataProvider('filterByCategoryDataProvider')]
+    public function testCanFilterPostsByCategory(string $category, int $postCount): void
     {
-        /** @var vfsStreamDirectory $directory */
+        $this->setUp();
+
         vfsStream::setup('root', null, $this->structure);
 
         $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister = new ItemListerFilesystem(
+        $itemLister                    = new ItemListerFilesystem(
             vfsStream::url('root/posts'),
             new Parser(),
             $blogArticleInputFilterFactory()
         );
-        $posts = new FilterPostByCategoryIterator(
+        $posts                         = new FilterPostByCategoryIterator(
             new ArrayIterator($itemLister->getArticles()),
             $category
         );
@@ -175,22 +180,23 @@ EOF;
     }
 
     /**
-     * @return array<int,array<string,int>>
+     * @return (int|string)[][]
+     * @psalm-return list{list{'Podcasts', 0}, list{'Software Development', 3}, list{'Public Speaking', 1}}
      */
-    public function filterByCategoryDataProvider(): array
+    public static function filterByCategoryDataProvider(): array
     {
         return [
             [
                 'Podcasts',
-                0
+                0,
             ],
             [
                 'Software Development',
-                3
+                3,
             ],
             [
                 'Public Speaking',
-                1
+                1,
             ],
         ];
     }

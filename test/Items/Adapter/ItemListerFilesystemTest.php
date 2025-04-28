@@ -4,21 +4,26 @@ declare(strict_types=1);
 
 namespace MarkdownBlogTest\Items\Adapter;
 
+use DateInterval;
+use DateTime;
 use MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
-use Monolog\Logger;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
-use PHPUnit\Framework\TestCase;
 use MarkdownBlog\Items\Adapter\ItemListerFilesystem;
 use Mni\FrontYAML\Parser;
+use org\bovigo\vfs\vfsStream;
+use Override;
+use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
+
+use function sprintf;
 
 /**
- * Class ItemListerFilesystem
- *
  * @coversDefaultClass \MarkdownBlog\Items\Adapter\ItemListerFilesystem
  */
-class ItemListerFilesystemTest extends TestCase
+final class ItemListerFilesystemTest extends TestCase
 {
+    private array $structure;
+
+    #[Override]
     protected function setUp(): void
     {
         $item001Content = <<<EOF
@@ -113,7 +118,7 @@ I've also got updates on what's been happening for me personally in my freelanci
 - [Paul M. Jones](http://paul-m-jones.com/)
 EOF;
 
-        $futureDate = (new \DateTime())->add(new \DateInterval('P3D'))->format('d.m.Y');
+        $futureDate     = (new DateTime())->add(new DateInterval('P3D'))->format('d.m.Y');
         $item003Content = sprintf($item003Content, $futureDate);
 
         $item004Content = <<<EOF
@@ -143,10 +148,9 @@ We talk about what it's like to run the tour, the time involved, the energy requ
 - [NYPHP User Group](http://nyphp.org/)
 EOF;
 
-        $futureDate = (new \DateTime())->add(new \DateInterval('P5D'))->format('d.m.Y');
+        $futureDate     = (new DateTime())->add(new DateInterval('P5D'))->format('d.m.Y');
         $item004Content = sprintf($item004Content, $futureDate);
 
-        $this->root = vfsStream::setup();
         $this->structure = [
             'posts' => [
                 'item-0001.md' => $item001Content,
@@ -155,15 +159,17 @@ EOF;
                 'item-0004.md' => $item004Content,
             ],
         ];
+        vfsStream::setup('root', null, $this->structure);
     }
 
-    public function testCanRetrieveASortedUniqueListOfCategories()
+    public function testCanRetrieveASortedUniqueListOfCategories(): void
     {
-        /** @var vfsStreamDirectory $directory */
+        $this->setUp();
+
         vfsStream::setup('root', null, $this->structure);
 
         $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister = new ItemListerFilesystem(
+        $itemLister                    = new ItemListerFilesystem(
             vfsStream::url('root/posts'),
             new Parser(),
             $blogArticleInputFilterFactory(),
@@ -176,19 +182,20 @@ EOF;
         $this->assertSame(
             [
                 'Public Speaking',
-                'Software Development'
+                'Software Development',
             ],
             $categories,
         );
     }
 
-    public function testCanRetrieveASortedUniqueListOfTags()
+    public function testCanRetrieveASortedUniqueListOfTags(): void
     {
-        /** @var vfsStreamDirectory $directory */
+        $this->setUp();
+
         vfsStream::setup('root', null, $this->structure);
 
         $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister = new ItemListerFilesystem(
+        $itemLister                    = new ItemListerFilesystem(
             vfsStream::url('root/posts'),
             new Parser(),
             $blogArticleInputFilterFactory(),
@@ -211,12 +218,14 @@ EOF;
         );
     }
 
-    public function testDataIsProperlyValidatedAndFiltered()
+    public function testDataIsProperlyValidatedAndFiltered(): void
     {
-        /** @var vfsStreamDirectory $directory */
+        $this->setUp();
+
         vfsStream::setup('root', null, $this->structure);
 
-        $log = $this->createMock(Logger::class);
+        /** @var LoggerInterface&MockObject $log */
+        $log = $this->createMock(LoggerInterface::class);
         $log
             ->expects($this->once())
             ->method('error')
@@ -224,13 +233,13 @@ EOF;
                 'Could not instantiate blog item for file vfs://root/posts/item-0001.md.',
                 [
                     'publishDate' => [
-                        'regexNotMatch' => "The input does not match against pattern '/\d{4}\-\d{2}\-\d{2}|(\d{2}\.){2}\d{4}/'"
-                    ]
+                        'regexNotMatch' => "The input does not match against pattern '/\d{4}\-\d{2}\-\d{2}|(\d{2}\.){2}\d{4}/'",
+                    ],
                 ]
             );
 
         $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister = new ItemListerFilesystem(
+        $itemLister                    = new ItemListerFilesystem(
             vfsStream::url('root/posts'),
             new Parser(),
             $blogArticleInputFilterFactory(),
@@ -241,5 +250,4 @@ EOF;
         $articles = $itemLister->getArticles();
         $this->assertCount(3, $articles);
     }
-
 }

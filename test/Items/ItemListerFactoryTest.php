@@ -6,224 +6,207 @@ namespace MarkdownBlogTest\Items;
 
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
-use MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use MarkdownBlog\Items\Adapter\ItemListerFilesystem;
 use MarkdownBlog\Items\ItemListerFactory;
 use Mni\FrontYAML\Parser;
-use Monolog\Logger;
+use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use UnexpectedValueException;
 
-class ItemListerFactoryTest extends TestCase
+use function sprintf;
+
+final class ItemListerFactoryTest extends TestCase
 {
-    use ProphecyTrait;
-
     private array $config;
 
+    #[Override]
     public function setUp(): void
     {
         $this->config = [
             'blog' => [
-                'type' => 'filesystem',
-                'path' => __DIR__ . '/../_data/posts',
+                'type'   => 'filesystem',
+                'path'   => __DIR__ . '/../_data/posts',
                 'parser' => Parser::class,
-            ]
+            ],
         ];
     }
 
-    public function testCanInstantiateItemListerInterfaceObject()
+    public function testCanInstantiateItemListerInterfaceObject(): void
     {
-        /** @var ContainerInterface|ObjectProphecy $container */
-        $container = $this->prophesize(ContainerInterface::class);
+        $this->setUp();
+
+        /** @var ContainerInterface&MockObject $container */
+        $container = $this->createMock(ContainerInterface::class);
         $container
-            ->get('config')
-            ->willReturn($this->config);
+            ->expects($this->atMost(4))
+            ->method('get')
+            ->willReturnOnConsecutiveCalls(
+                $this->config,
+                $this->createMock(InputFilterInterface::class),
+                new Parser(),
+                $this->createMock(LoggerInterface::class)
+            );
         $container
-            ->has(Parser::class)
+            ->expects($this->once())
+            ->method('has')
+            ->with(LoggerInterface::class)
             ->willReturn(true);
-        $container
-            ->get(Parser::class)
-            ->willReturn(new Parser());
-        $container
-            ->has(LoggerInterface::class)
-            ->willReturn(true);
 
-        $logger = $this->createMock(LoggerInterface::class);
-        $container
-            ->get(LoggerInterface::class)
-            ->willReturn($logger);
-
-        $inputFilter = $this->prophesize(InputFilterInterface::class);
-        $container
-            ->get(InputFilterInterface::class)
-            ->willReturn($inputFilter->reveal());
-
-        $factory = new ItemListerFactory();
-        $itemLister = $factory($container->reveal());
+        $factory    = new ItemListerFactory();
+        $itemLister = $factory($container);
         $this->assertInstanceOf(ItemListerFilesystem::class, $itemLister);
     }
 
-    public function testThrowsExceptionIfTestDirectoryIsNotAvailableOrUsable()
+    public function testThrowsExceptionIfTestDirectoryIsNotAvailableOrUsable(): void
     {
-        $this->expectException(\UnexpectedValueException::class);
+        $this->setUp();
+
+        $this->expectException(UnexpectedValueException::class);
 
         $config = [
             'blog' => [
-                'type' => 'filesystem',
-                'path' => __DIR__ . '/../data/posts',
+                'type'   => 'filesystem',
+                'path'   => __DIR__ . '/../data/posts',
                 'parser' => Parser::class,
-            ]
+            ],
         ];
 
-        /** @var ContainerInterface|ObjectProphecy $container */
-        $container = $this->prophesize(ContainerInterface::class);
+        /** @var ContainerInterface&MockObject $container */
+        $container = $this->createMock(ContainerInterface::class);
         $container
-            ->get('config')
-            ->willReturn($config);
-        $container
-            ->has(Parser::class)
-            ->willReturn(true);
-        $container
-            ->get(Parser::class)
-            ->willReturn(new Parser());
-        $container
-            ->has(LoggerInterface::class)
-            ->willReturn(false);
+            ->expects($this->atMost(3))
+            ->method('get')
+            ->willReturnOnConsecutiveCalls(
+                $config,
+                $this->createMock(InputFilterInterface::class),
+                new Parser(),
+            );
 
-        $inputFilter = $this->prophesize(InputFilterInterface::class);
         $container
-            ->get(InputFilterInterface::class)
-            ->willReturn($inputFilter->reveal());
+            ->expects($this->once())
+            ->method('has')
+            ->willReturnOnConsecutiveCalls(false);
 
         $factory = new ItemListerFactory();
-        $factory($container->reveal());
+        $factory($container);
     }
 
-    public function testThrowsExceptionIfParserServiceRetrievedFromTheContainerIsNotOfTheCorrectType()
+    public function testThrowsExceptionIfParserServiceRetrievedFromTheContainerIsNotOfTheCorrectType(): void
     {
         $this->expectException(InvalidServiceException::class);
         $this->expectExceptionMessage(sprintf(
             'Parse is not of the correct type. Received %s, but was expecting %s.',
-            null,
-            Parser::class
+            $this->config['blog']['parser'],
+            Parser::class,
         ));
 
-        /** @var ContainerInterface|ObjectProphecy $container */
-        $container = $this->prophesize(ContainerInterface::class);
-        $container
-            ->get('config')
-            ->willReturn($this->config);
-        $container
-            ->has(Parser::class)
-            ->willReturn(true);
-        $container
-            ->get(Parser::class)
-            ->willReturn(null);
-        $container
-            ->has(LoggerInterface::class)
-            ->willReturn(false);
+        $inputFilter = $this->createMock(InputFilterInterface::class);
 
-        $inputFilter = $this->prophesize(InputFilterInterface::class);
+        /** @var ContainerInterface&MockObject $container */
+        $container = $this->createMock(ContainerInterface::class);
         $container
-            ->get(InputFilterInterface::class)
-            ->willReturn($inputFilter->reveal());
+            ->expects($this->atMost(3))
+            ->method('get')
+            ->willReturnOnConsecutiveCalls(
+                $this->config,
+                $inputFilter,
+                Parser::class,
+            );
 
         $factory = new ItemListerFactory();
-        $factory($container->reveal());
+        $factory($container);
     }
 
-    /**
-     * @dataProvider invalidBlogConfigurationProvider
-     */
-    public function testThrowsExceptionIfBlogConfigurationIsInvalidOrMissing(?array $config)
+    #[DataProvider('invalidBlogConfigurationProvider')]
+    public function testThrowsExceptionIfBlogConfigurationIsInvalidOrMissing(array|null $config = null): void
     {
         $this->expectException(InvalidServiceException::class);
         $this->expectExceptionMessage('Blog configuration was invalid.');
 
-        /** @var ContainerInterface|ObjectProphecy $container */
-        $container = $this->prophesize(ContainerInterface::class);
-        $container
-            ->get('config')
-            ->willReturn($config);
-        $container
-            ->has(Parser::class)
-            ->willReturn(true);
-        $container
-            ->get(Parser::class)
-            ->willReturn(null);
-        $container
-            ->has(LoggerInterface::class)
-            ->willReturn(false);
+        $inputFilter = $this->createMock(InputFilterInterface::class);
 
-        $inputFilter = $this->prophesize(InputFilterInterface::class);
+        /** @var ContainerInterface&MockObject $container */
+        $container = $this->createMock(ContainerInterface::class);
         $container
-            ->get(InputFilterInterface::class)
-            ->willReturn($inputFilter->reveal());
+            ->expects($this->atMost(3))
+            ->method('get')
+            ->willReturnOnConsecutiveCalls(
+                $config,
+                $inputFilter,
+                Parser::class,
+            );
+        $container
+            ->expects($this->never())
+            ->method('has');
 
         $factory = new ItemListerFactory();
-        $factory($container->reveal());
+        $factory($container);
     }
 
-    public function invalidBlogConfigurationProvider(): ?array
+    /**
+     * @return (null|string[][])[][]
+     * @psalm-return list{list{array{blag: array{type: 'filesystem', path: '/home/settermjd/Workspace/PHP/markdown-blog/test/Items/../_data/posts', parser: Parser::class}}}, list{null}}
+     */
+    public static function invalidBlogConfigurationProvider(): array
     {
         return [
             [
-                'blog' => [
-                    'type' => 'filesystem',
-                    'path' => __DIR__ . '/../_data/posts',
-                    'parser' => Parser::class,
-                ]
+                [
+                    'blag' => [
+                        'type'   => 'filesystem',
+                        'path'   => __DIR__ . '/../_data/posts',
+                        'parser' => Parser::class,
+                    ],
+                ],
             ],
             [
-                null
+                null,
             ],
         ];
     }
 
-    /**
-     * @dataProvider invalidInputFilterProvider
-     */
-    public function testThrowsExceptionIfInputFilterIsInvalidOrMissing($inputFilter = null)
-    {
+    #[DataProvider('invalidInputFilterProvider')]
+    public function testThrowsExceptionIfInputFilterIsInvalidOrMissing(
+        InputFilterInterface|null $inputFilter = null
+    ): void {
         if (! $inputFilter instanceof InputFilterInterface) {
             $this->expectException(InvalidServiceException::class);
             $this->expectExceptionMessage('Input filter is invalid.');
         }
 
-        /** @var ContainerInterface|ObjectProphecy $container */
-        $container = $this->prophesize(ContainerInterface::class);
+        /** @var ContainerInterface&MockObject $container */
+        $container = $this->createMock(ContainerInterface::class);
         $container
-            ->get('config')
-            ->willReturn($this->config);
+            ->expects($this->atMost(3))
+            ->method('get')
+            ->willReturnOnConsecutiveCalls(
+                $this->config,
+                $inputFilter,
+                Parser::class,
+            );
         $container
-            ->has(Parser::class)
-            ->willReturn(true);
-        $container
-            ->get(Parser::class)
-            ->willReturn(new Parser());
-        $container
-            ->get(InputFilterInterface::class)
-            ->willReturn($inputFilter);
-        $container
-            ->has(LoggerInterface::class)
-            ->willReturn(false);
+            ->expects($this->atMost(2))
+            ->method('has')
+            ->willReturnOnConsecutiveCalls(true, false);
 
         $factory = new ItemListerFactory();
-        $factory($container->reveal());
+        $factory($container);
     }
 
-    public function invalidInputFilterProvider(): array
+    /**
+     * @return null[][]
+     * @psalm-return list{list{null}}
+     */
+    public static function invalidInputFilterProvider(): array
     {
         return [
             [
-                null
+                null,
             ],
-            [
-                []
-            ]
         ];
     }
 }

@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace MarkdownBlog\Iterator;
 
 use DateTime;
+use FilterIterator;
+use Iterator;
 use MarkdownBlog\Entity\BlogArticle;
+use Override;
 
 /**
- * Class UpcomingItemFilterIterator.
- *
- * @author Matthew Setter <matthew@matthewsetter.com>
- * @copyright 2015 Matthew Setter
+ * @template-implements \FilterIterator
  */
-class UpcomingItemFilterIterator extends \FilterIterator
+final class UpcomingItemFilterIterator extends FilterIterator
 {
-    public function __construct(\Iterator $iterator)
+    public function __construct(Iterator $iterator)
     {
         parent::__construct($iterator);
         $this->rewind();
@@ -24,11 +24,14 @@ class UpcomingItemFilterIterator extends \FilterIterator
     /**
      * Determine if the current episode has a publish date of later than today.
      */
+    #[Override]
     public function accept(): bool
     {
         /** @var BlogArticle $episode */
-        $episode = $this->getInnerIterator()->current();
+        $episode = $this->getInnerIterator()?->current();
 
-        return $episode->getPublishDate() > new DateTime();
+        return $episode instanceof BlogArticle
+            ? $episode->getPublishDate() > new DateTime()
+            : false;
     }
 }

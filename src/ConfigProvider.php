@@ -14,15 +14,17 @@ use MarkdownBlog\Items\ItemListerInterface;
  *
  * @see https://docs.laminas.dev/laminas-component-installer/
  */
-class ConfigProvider
+final class ConfigProvider
 {
     /**
      * Returns the configuration array
      *
      * To add a bit of a structure, each section is defined in a separate
      * method which returns an array with its configuration.
+     *
+     * @return string[][][]
      */
-    public function __invoke() : array
+    public function __invoke(): array
     {
         return [
             'dependencies' => $this->getDependencies(),
@@ -31,12 +33,14 @@ class ConfigProvider
 
     /**
      * Returns the container dependencies
+     *
+     * @return string[][]
      */
-    public function getDependencies() : array
+    public function getDependencies(): array
     {
         return [
-            'factories'  => [
-                ItemListerInterface::class => ItemListerFactory::class,
+            'factories' => [
+                ItemListerInterface::class  => ItemListerFactory::class,
                 InputFilterInterface::class => BlogArticleInputFilterFactory::class,
             ],
         ];

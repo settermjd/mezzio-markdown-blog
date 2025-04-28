@@ -5,20 +5,25 @@ declare(strict_types=1);
 namespace MarkdownBlogTest\Iterator;
 
 use ArrayIterator;
+use DateInterval;
+use DateTime;
 use MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use MarkdownBlog\Items\Adapter\ItemListerFilesystem;
 use MarkdownBlog\Iterator\PublishedItemFilterIterator;
 use MarkdownBlog\Iterator\UpcomingItemFilterIterator;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
-use PHPUnit\Framework\TestCase;
 use Mni\FrontYAML\Parser;
+use org\bovigo\vfs\vfsStream;
+use Override;
+use PHPUnit\Framework\TestCase;
 
-class EpisodeFilterIteratorTest extends TestCase
+use function iterator_count;
+use function sprintf;
+
+final class EpisodeFilterIteratorTest extends TestCase
 {
-    private $root;
-    private $structure;
+    private array $structure;
 
+    #[Override]
     protected function setUp(): void
     {
         $item001Content = <<<EOF
@@ -110,7 +115,7 @@ I've also got updates on what's been happening for me personally in my freelanci
 - [Paul M. Jones](http://paul-m-jones.com/)
 EOF;
 
-        $futureDate = (new \DateTime())->add(new \DateInterval('P3D'))->format('d.m.Y');
+        $futureDate     = (new DateTime())->add(new DateInterval('P3D'))->format('d.m.Y');
         $item003Content = sprintf($item003Content, $futureDate);
 
         $item004Content = <<<EOF
@@ -140,10 +145,9 @@ We talk about what it's like to run the tour, the time involved, the energy requ
 - [NYPHP User Group](http://nyphp.org/)
 EOF;
 
-        $futureDate = (new \DateTime())->add(new \DateInterval('P5D'))->format('d.m.Y');
+        $futureDate     = (new DateTime())->add(new DateInterval('P5D'))->format('d.m.Y');
         $item004Content = sprintf($item004Content, $futureDate);
 
-        $this->root = vfsStream::setup();
         $this->structure = [
             'posts' => [
                 'item-0001.md' => $item001Content,
@@ -152,20 +156,22 @@ EOF;
                 'item-0004.md' => $item004Content,
             ],
         ];
+        vfsStream::setup('root', null, $this->structure);
     }
 
-    public function testCanFilterUpcomingItems()
+    public function testCanFilterUpcomingItems(): void
     {
-        /** @var vfsStreamDirectory $directory */
+        $this->setUp();
+
         vfsStream::setup('root', null, $this->structure);
 
         $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister = new ItemListerFilesystem(
+        $itemLister                    = new ItemListerFilesystem(
             vfsStream::url('root/posts'),
             new Parser(),
             $blogArticleInputFilterFactory()
         );
-        $upcomingItems = new UpcomingItemFilterIterator(
+        $upcomingItems                 = new UpcomingItemFilterIterator(
             new ArrayIterator(
                 $itemLister->getArticles()
             )
@@ -180,18 +186,19 @@ EOF;
         );
     }
 
-    public function testCanGetAllPastItems()
+    public function testCanGetAllPastItems(): void
     {
-        /** @var vfsStreamDirectory $directory */
+        $this->setUp();
+
         vfsStream::setup('root', null, $this->structure);
 
         $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister = new ItemListerFilesystem(
+        $itemLister                    = new ItemListerFilesystem(
             vfsStream::url('root/posts'),
             new Parser(),
             $blogArticleInputFilterFactory()
         );
-        $publishedItems = new PublishedItemFilterIterator(
+        $publishedItems                = new PublishedItemFilterIterator(
             new ArrayIterator(
                 $itemLister->getArticles()
             )

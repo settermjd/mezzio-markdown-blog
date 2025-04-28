@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace MarkdownBlog\Entity\Traits;
 
 /**
- * Trait GetExplicit
+ * Trait GetExplicitTrait
  * As both the Show and BlogArticle entities use this function,
  * it's being shared via a trait.
- *
- * @author Matthew Setter <matthew@matthewsetter.com>
- * @copyright 2021 Matthew Setter
  */
-trait GetExplicit
+trait GetExplicitTrait
 {
     protected string $explicit;
 
@@ -23,6 +20,6 @@ trait GetExplicit
      */
     public function getExplicit()
     {
-        return (is_null($this->explicit)) ? 'no' : $this->explicit;
+        return $this->explicit ?? 'no';
     }
 }

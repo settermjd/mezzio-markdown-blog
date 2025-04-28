@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace MarkdownBlog\Items;
 
+use MarkdownBlog\Entity\BlogArticle;
+
 /**
  * Interface ItemListerInterface.
- *
- * @author Matthew Setter <matthew@matthewsetter.com>
- * @copyright 2021 Matthew Setter
  */
 interface ItemListerInterface
 {
-    public function getArticle(string $episodeSlug);
-
-    public function getArticles();
+    /**
+     * Return the available articles.
+     *
+     * @return array<int,BlogArticle>
+     */
+    public function getArticles(): array;
 
     /**
      * This function returns a unique and sorted scalar array of all categories

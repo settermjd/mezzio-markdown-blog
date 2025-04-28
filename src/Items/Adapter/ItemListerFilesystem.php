@@ -7,44 +7,44 @@ namespace MarkdownBlog\Items\Adapter;
 use DirectoryIterator;
 use Laminas\Hydrator\ArraySerializableHydrator;
 use Laminas\InputFilter\InputFilterInterface;
+use MarkdownBlog\Entity\BlogArticle;
 use MarkdownBlog\Items\ItemListerInterface;
 use MarkdownBlog\Iterator\MarkdownFileFilterIterator;
-use MarkdownBlog\Entity\BlogArticle;
 use Mni\FrontYAML\Document;
 use Mni\FrontYAML\Parser;
-use Monolog\Logger;
+use Override;
 use Psr\Log\LoggerInterface;
-use Traversable;
+use SplFileInfo;
 
-/**
- * Class ItemListerFilesystem.
- *
- * @author Matthew Setter <matthew@matthewsetter.com>
- * @copyright 2015 Matthew Setter
- */
-class ItemListerFilesystem implements ItemListerInterface
+use function array_merge;
+use function array_unique;
+use function file_get_contents;
+use function is_object;
+use function sort;
+use function sprintf;
+
+final class ItemListerFilesystem implements ItemListerInterface
 {
-    public const CACHE_KEY_EPISODES_LIST = 'episodes_';
-    public const CACHE_KEY_SUFFIX_ALL = 'all';
+    public const CACHE_KEY_EPISODES_LIST   = 'episodes_';
+    public const CACHE_KEY_SUFFIX_ALL      = 'all';
     public const CACHE_KEY_SUFFIX_UPCOMING = 'upcoming';
-    public const CACHE_KEY_SUFFIX_PAST = 'past';
+    public const CACHE_KEY_SUFFIX_PAST     = 'past';
 
-    protected string $postDirectory;
-    private InputFilterInterface $inputFilter;
-    protected Parser $fileParser;
     protected MarkdownFileFilterIterator $episodeIterator;
-    protected ?object $cache = null;
-    private ?LoggerInterface $logger = null;
+    protected object|null $cache = null;
 
+    /**
+     * @param object $cache
+     */
     public function __construct(
-        string $postDirectory,
-        Parser $fileParser,
-        InputFilterInterface $inputFilter,
+        protected string $postDirectory,
+        protected Parser $fileParser,
+        private InputFilterInterface $inputFilter,
         $cache = null,
-        LoggerInterface $logger = null
+        private LoggerInterface|null $logger = null
     ) {
         $this->postDirectory = $postDirectory;
-        $this->fileParser = $fileParser;
+        $this->fileParser    = $fileParser;
 
         if (is_object($cache)) {
             $this->cache = $cache;
@@ -53,8 +53,8 @@ class ItemListerFilesystem implements ItemListerInterface
         $this->episodeIterator = new MarkdownFileFilterIterator(
             new DirectoryIterator($this->postDirectory)
         );
-        $this->inputFilter = $inputFilter;
-        $this->logger = $logger;
+        $this->inputFilter     = $inputFilter;
+        $this->logger          = $logger;
     }
 
     /**
@@ -62,12 +62,13 @@ class ItemListerFilesystem implements ItemListerInterface
      *
      * @return array<int,BlogArticle>
      */
-    public function getArticles($cacheKeySuffix = self::CACHE_KEY_SUFFIX_ALL): array
+    #[Override]
+    public function getArticles(string $cacheKeySuffix = self::CACHE_KEY_SUFFIX_ALL): array
     {
         if ($this->cache) {
-            $cacheKey = self::CACHE_KEY_EPISODES_LIST.$cacheKeySuffix;
-            $result = $this->cache->getItem($cacheKey);
-            if (!$result) {
+            $cacheKey = self::CACHE_KEY_EPISODES_LIST . $cacheKeySuffix;
+            $result   = $this->cache->getItem($cacheKey);
+            if (! $result) {
                 $result = $this->buildArticlesList();
                 $this->cache->setItem($cacheKey, $result);
             }
@@ -78,14 +79,15 @@ class ItemListerFilesystem implements ItemListerInterface
     }
 
     /**
-     * @return array<int,BlogArticle>
+     * @return BlogArticle[]
+     * @psalm-return list{0?: BlogArticle,...}
      */
     protected function buildArticlesList(): array
     {
         $episodeListing = [];
         foreach ($this->episodeIterator as $file) {
             $article = $this->buildArticleFromFile($file);
-            if (! is_null($article)) {
+            if ($article !== null) {
                 $episodeListing[] = $article;
             }
         }
@@ -93,27 +95,11 @@ class ItemListerFilesystem implements ItemListerInterface
         return $episodeListing;
     }
 
-    /**
-     * @return BlogArticle|string
-     */
-    public function getArticle($episodeSlug)
-    {
-        foreach ($this->episodeIterator as $file) {
-            $article = $this->buildArticleFromFile($file);
-            if (! is_null($article) && $article->getSlug() === $episodeSlug) {
-                return $article;
-            }
-        }
-
-        return '';
-    }
-
-    public function buildArticleFromFile(\SplFileInfo $file): ?BlogArticle
+    public function buildArticleFromFile(SplFileInfo $file): ?BlogArticle
     {
         $fileContent = file_get_contents($file->getPathname());
 
-        /** @var Document $document */
-        $document = $this->fileParser->parse($fileContent, false);
+        $document    = $this->fileParser->parse($fileContent, false);
         $articleData = $this->getArticleData($document);
 
         $this->inputFilter->setData($articleData);
@@ -137,27 +123,32 @@ class ItemListerFilesystem implements ItemListerInterface
             );
     }
 
+    /**
+     * @return (array|mixed|string)[]
+     * @psalm-return array{categories: array<never, never>|mixed, content: string, image: ''|mixed, publishDate: ''|mixed, slug: ''|mixed, synopsis: ''|mixed, tags: array<never, never>|mixed, title: ''|mixed}
+     */
     public function getArticleData(Document $document): array
     {
         return [
-            'categories' => $document->getYAML()['categories'] ?? [],
-            'content' => $document->getContent(),
-            'image' => $document->getYAML()['image'] ?? '',
+            'categories'  => $document->getYAML()['categories'] ?? [],
+            'content'     => $document->getContent(),
+            'image'       => $document->getYAML()['image'] ?? '',
             'publishDate' => $document->getYAML()['publish_date'] ?? '',
-            'slug' => $document->getYAML()['slug'] ?? '',
-            'synopsis' => $document->getYAML()['synopsis'] ?? '',
-            'tags' => $document->getYAML()['tags'] ?? [],
-            'title' => $document->getYAML()['title'] ?? '',
+            'slug'        => $document->getYAML()['slug'] ?? '',
+            'synopsis'    => $document->getYAML()['synopsis'] ?? '',
+            'tags'        => $document->getYAML()['tags'] ?? [],
+            'title'       => $document->getYAML()['title'] ?? '',
         ];
     }
 
     /**
      * @inheritDoc
      */
+    #[Override]
     public function getCategories(): array
     {
         $categories = [];
-        $articles = $this->getArticles();
+        $articles   = $this->getArticles();
         foreach ($articles as $article) {
             if ($article instanceof BlogArticle) {
                 $categories = array_merge($categories, $article->getCategories());
@@ -171,9 +162,10 @@ class ItemListerFilesystem implements ItemListerInterface
     /**
      * @inheritDoc
      */
+    #[Override]
     public function getTags(): array
     {
-        $tags = [];
+        $tags     = [];
         $articles = $this->getArticles();
         foreach ($articles as $article) {
             if ($article instanceof BlogArticle) {

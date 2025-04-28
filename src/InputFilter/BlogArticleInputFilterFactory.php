@@ -2,34 +2,31 @@
 
 declare(strict_types=1);
 
-
 namespace MarkdownBlog\InputFilter;
 
-
-use Laminas\Filter\HtmlEntities;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripNewlines;
 use Laminas\Filter\StripTags;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
-use Laminas\InputFilter\InputFilterInterface;
-use Laminas\Validator\Date;
 use Laminas\Validator\IsCountable;
 use Laminas\Validator\Regex;
-use Laminas\Validator\StringLength;
 
-class BlogArticleInputFilterFactory
+final class BlogArticleInputFilterFactory
 {
-    public function __invoke(): InputFilterInterface
+    /**
+     * @psalm-return InputFilter<mixed>
+     */
+    public function __invoke(): InputFilter
     {
         $publishDate = new Input('publishDate');
         $publishDate
             ->getValidatorChain()
             ->attach(new Regex(
-                         [
-                             'pattern' => '/\d{4}\-\d{2}\-\d{2}|(\d{2}\.){2}\d{4}/',
-                         ]
-                     ));
+                [
+                    'pattern' => '/\d{4}\-\d{2}\-\d{2}|(\d{2}\.){2}\d{4}/',
+                ]
+            ));
         $publishDate
             ->getFilterChain()
             ->attach(new StringTrim())
@@ -91,7 +88,6 @@ class BlogArticleInputFilterFactory
             ->add($image)
             ->add($content)
             ->add($tags)
-            ->add($categories)
-            ;
+            ->add($categories);
     }
 }

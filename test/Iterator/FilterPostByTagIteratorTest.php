@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MarkdownBlogTest\Iterator;
 
 use ArrayIterator;
+use DateInterval;
+use DateTime;
 use MarkdownBlog\Entity\BlogArticle;
 use MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use MarkdownBlog\Items\Adapter\ItemListerFilesystem;
@@ -11,14 +15,18 @@ use MarkdownBlog\Iterator\FilterPostByTagIterator;
 use MarkdownBlog\Iterator\PublishedItemFilterIterator;
 use Mni\FrontYAML\Parser;
 use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
+use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class FilterPostByTagIteratorTest extends TestCase
-{
-    private $root;
-    private $structure;
+use function sprintf;
 
+final class FilterPostByTagIteratorTest extends TestCase
+{
+    private array $structure;
+
+    #[Override]
     protected function setUp(): void
     {
         $item001Content = <<<EOF
@@ -111,7 +119,7 @@ I've also got updates on what's been happening for me personally in my freelanci
 - [Paul M. Jones](http://paul-m-jones.com/)
 EOF;
 
-        $futureDate = (new \DateTime())->add(new \DateInterval('P3D'))->format('d.m.Y');
+        $futureDate     = (new DateTime())->add(new DateInterval('P3D'))->format('d.m.Y');
         $item003Content = sprintf($item003Content, $futureDate);
 
         $item004Content = <<<EOF
@@ -141,10 +149,9 @@ We talk about what it's like to run the tour, the time involved, the energy requ
 - [NYPHP User Group](http://nyphp.org/)
 EOF;
 
-        $futureDate = (new \DateTime())->add(new \DateInterval('P5D'))->format('d.m.Y');
+        $futureDate     = (new DateTime())->add(new DateInterval('P5D'))->format('d.m.Y');
         $item004Content = sprintf($item004Content, $futureDate);
 
-        $this->root = vfsStream::setup();
         $this->structure = [
             'posts' => [
                 'item-0001.md' => $item001Content,
@@ -153,23 +160,23 @@ EOF;
                 'item-0004.md' => $item004Content,
             ],
         ];
+        vfsStream::setup('root', null, $this->structure);
     }
 
-    /**
-     * @dataProvider filterByTagDataProvider
-     */
-    public function testCanFilterPostsByTag(string $tag, int $postCount)
+    #[DataProvider('filterByTagDataProvider')]
+    public function testCanFilterPostsByTag(string $tag, int $postCount): void
     {
-        /** @var vfsStreamDirectory $directory */
+        $this->setUp();
+
         vfsStream::setup('root', null, $this->structure);
 
         $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister = new ItemListerFilesystem(
+        $itemLister                    = new ItemListerFilesystem(
             vfsStream::url('root/posts'),
             new Parser(),
             $blogArticleInputFilterFactory()
         );
-        $posts = new FilterPostByTagIterator(
+        $posts                         = new FilterPostByTagIterator(
             new ArrayIterator($itemLister->getArticles()),
             $tag
         );
@@ -177,37 +184,38 @@ EOF;
     }
 
     /**
-     * @return array<int,array<string,int>>
+     * @return (int|string)[][]
+     * @psalm-return list{list{'Kubernetes', 0}, list{'PHP', 3}, list{'Docker', 1}, list{'slim framework', 1}}
      */
-    public function filterByTagDataProvider(): array
+    public static function filterByTagDataProvider(): array
     {
         return [
             [
                 'Kubernetes',
-                0
+                0,
             ],
             [
                 'PHP',
-                3
+                3,
             ],
             [
                 'Docker',
-                1
+                1,
             ],
             [
                 'slim framework',
-                1
+                1,
             ],
         ];
     }
 
-    public function testCanHandleTagListsWithEmptyAndNullValues()
+    public function testCanHandleTagListsWithEmptyAndNullValues(): void
     {
         $item = new BlogArticle([
             "publishDate" => "2015-01-01",
-            "slug" => "blogArticle-001",
-            "title" => "BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001",
-            "content" => <<<EOF
+            "slug"        => "blogArticle-001",
+            "title"       => "BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001",
+            "content"     => <<<EOF
 In this blogArticle, I have a fireside chat with internationally recognized PHP expert, and all around good fella [Paul M. Jones](http://paul-m-jones.com), about one of his all-time favorite books - [The Mythical Man Month](http://www.amazon.co.uk/The-Mythical-Man-month-Software-Engineering/dp/0201835959).
 
 We talk about why the book is so valuable to him, how it's helped shape his career over the years, and the lessons it can teach all of us as software developers, lessons still relevant over 50 years after it was first published, in 1975.
@@ -216,23 +224,26 @@ I've also got updates on what's been happening for me personally in my freelanci
 
 > **Correction:** Thanks to [@asgrim](https://twitter.com/@asgrim) for correcting me about employers rarely, if ever, paying for flights and hotels when sending staff to conferences. That was a slip up on my part. I'd only meant to say that they cover the costs of the ticket.
 EOF,
-            "synopsis" => 'In this blogArticle, I have a fireside chat with internationally recognized PHP expert Paul M. Jones about one of his all-time favorite books, The Mythical Man Month.',
-            "image" => "http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0002.mp3",
-            'tags' => [null, ''],
-            'categories' => ['Software Development'],
+            "synopsis"    => 'In this blogArticle, I have a fireside chat with internationally recognized PHP expert Paul M. Jones about one of his all-time favorite books, The Mythical Man Month.',
+            "image"       => "http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0002.mp3",
+            'tags'        => [null, ''],
+            'categories'  => ['Software Development'],
         ]);
+
+        /** @var ItemListerInterface&MockObject itemLister A mocked ItemListerInterface object */
         $itemLister = $this->createMock(ItemListerInterface::class);
         $itemLister
             ->expects($this->once())
             ->method('getArticles')
             ->willReturn([
-                $item
+                $item,
             ]);
 
         $posts = new FilterPostByTagIterator(
             new PublishedItemFilterIterator(
                 new ArrayIterator($itemLister->getArticles())
-            ), 'PHP'
+            ),
+            'PHP'
         );
         $this->assertCount(0, $posts);
     }

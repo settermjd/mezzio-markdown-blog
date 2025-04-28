@@ -5,32 +5,34 @@ declare(strict_types=1);
 namespace MarkdownBlog\Entity;
 
 use DateTime;
-use MarkdownBlog\Entity\Traits\GetExplicit;
 use Michelf\MarkdownExtra;
 
-class BlogArticle
+use function array_key_exists;
+use function get_class_vars;
+
+final class BlogArticle
 {
     private DateTime $publishDate;
-    private string $slug = '';
-    private string $title = '';
-    private string $image = '';
-    private string $synopsis = '';
-    private string $content = '';
+    private string $slug      = '';
+    private string $title     = '';
+    private string $image     = '';
+    private string $synopsis  = '';
+    private string $content   = '';
     private array $categories = [];
-    private array $tags = [];
+    private array $tags       = [];
 
     public function __construct(array $options = [])
     {
         $this->populate($options);
     }
 
-    public function populate(array $options = [])
+    public function populate(array $options = []): void
     {
-        $properties = get_class_vars(__CLASS__);
+        $properties = get_class_vars(self::class);
         foreach ($options as $key => $value) {
-            if (array_key_exists($key, $properties) && !empty($value)) {
-                $this->$key = ($key === 'publishDate')
-                    ? new \DateTime($value)
+            if (array_key_exists($key, $properties) && ! empty($value)) {
+                $this->$key = $key === 'publishDate'
+                    ? new DateTime($value)
                     : $value;
             }
         }
