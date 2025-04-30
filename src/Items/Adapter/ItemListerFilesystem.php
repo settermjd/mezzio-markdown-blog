@@ -14,12 +14,12 @@ use Mni\FrontYAML\Document;
 use Mni\FrontYAML\Parser;
 use Override;
 use Psr\Log\LoggerInterface;
+use Psr\SimpleCache\CacheInterface;
 use SplFileInfo;
 
 use function array_merge;
 use function array_unique;
 use function file_get_contents;
-use function is_object;
 use function sort;
 use function sprintf;
 
@@ -31,21 +31,17 @@ final class ItemListerFilesystem implements ItemListerInterface
     public const CACHE_KEY_SUFFIX_PAST     = 'past';
 
     protected MarkdownFileFilterIterator $episodeIterator;
-    protected object|null $cache = null;
 
     public function __construct(
         protected string $postDirectory,
         protected Parser $fileParser,
         private InputFilterInterface $inputFilter,
-        $cache = null,
+        protected CacheInterface|null $cache = null,
         private LoggerInterface|null $logger = null
     ) {
         $this->postDirectory = $postDirectory;
         $this->fileParser    = $fileParser;
-
-        if (is_object($cache)) {
-            $this->cache = $cache;
-        }
+        $this->cache         = $cache;
 
         $this->episodeIterator = new MarkdownFileFilterIterator(
             new DirectoryIterator($this->postDirectory)
@@ -64,12 +60,11 @@ final class ItemListerFilesystem implements ItemListerInterface
     {
         if ($this->cache) {
             $cacheKey = self::CACHE_KEY_EPISODES_LIST . $cacheKeySuffix;
-            $result   = $this->cache->getItem($cacheKey);
-            if (! $result) {
+            if (! $this->cache->has($cacheKey)) {
                 $result = $this->buildArticlesList();
-                $this->cache->setItem($cacheKey, $result);
+                $this->cache->set($cacheKey, $result);
             }
-            return $result;
+            return $this->cache->get($cacheKey);
         }
 
         return $this->buildArticlesList();
