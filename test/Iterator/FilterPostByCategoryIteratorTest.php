@@ -20,6 +20,7 @@ use function sprintf;
 
 final class FilterPostByCategoryIteratorTest extends TestCase
 {
+  /** @var array<string,array<string,string>> */
     private array $structure;
 
     #[Override]

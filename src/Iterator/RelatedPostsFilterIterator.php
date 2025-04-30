@@ -11,6 +11,12 @@ use Override;
 
 use function array_intersect;
 
+/**
+ * @template TKey of int
+ * @template TValue of BlogArticle
+ * @template TIterator of Iterator
+ * @template-extends FilterIterator<TKey,TValue,TIterator>
+ */
 final class RelatedPostsFilterIterator extends FilterIterator
 {
     private BlogArticle $blogArticle;
@@ -29,10 +35,7 @@ final class RelatedPostsFilterIterator extends FilterIterator
     #[Override]
     public function accept(): bool
     {
-        $post = $this->getInnerIterator()?->current();
-        if (! $post instanceof BlogArticle) {
-            return false;
-        }
+        $post = $this->getInnerIterator()->current();
 
         $matchingTags       = array_intersect($post->getTags(), $this->blogArticle->getTags());
         $matchingCategories = array_intersect($post->getCategories(), $this->blogArticle->getCategories());

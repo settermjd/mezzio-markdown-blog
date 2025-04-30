@@ -14,6 +14,12 @@ use Override;
 
 use function iterator_count;
 
+/**
+ * @template TKey of int
+ * @template TValue of BlogArticle
+ * @template TIterator of Iterator
+ * @template-extends FilterIterator<TKey,TValue,TIterator>
+ */
 final class PublishedItemFilterIterator extends FilterIterator implements Countable
 {
     public function __construct(Iterator $iterator)
@@ -30,11 +36,9 @@ final class PublishedItemFilterIterator extends FilterIterator implements Counta
     #[Override]
     public function accept(): bool
     {
-        $episode = $this->getInnerIterator()?->current();
+        $episode = $this->getInnerIterator()->current();
 
-        return $episode instanceof BlogArticle
-            ? $episode->getPublishDate() <= new DateTime()
-            : false;
+        return $episode->getPublishDate() <= new DateTime();
     }
 
     public function count(): int

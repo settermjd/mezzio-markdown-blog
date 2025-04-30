@@ -33,9 +33,6 @@ final class ItemListerFilesystem implements ItemListerInterface
     protected MarkdownFileFilterIterator $episodeIterator;
     protected object|null $cache = null;
 
-    /**
-     * @param object $cache
-     */
     public function __construct(
         protected string $postDirectory,
         protected Parser $fileParser,
@@ -80,7 +77,6 @@ final class ItemListerFilesystem implements ItemListerInterface
 
     /**
      * @return BlogArticle[]
-     * @psalm-return list{0?: BlogArticle,...}
      */
     protected function buildArticlesList(): array
     {
@@ -95,7 +91,7 @@ final class ItemListerFilesystem implements ItemListerInterface
         return $episodeListing;
     }
 
-    public function buildArticleFromFile(SplFileInfo $file): ?BlogArticle
+    public function buildArticleFromFile(SplFileInfo $file): BlogArticle|null
     {
         $fileContent = file_get_contents($file->getPathname());
 
@@ -150,9 +146,7 @@ final class ItemListerFilesystem implements ItemListerInterface
         $categories = [];
         $articles   = $this->getArticles();
         foreach ($articles as $article) {
-            if ($article instanceof BlogArticle) {
-                $categories = array_merge($categories, $article->getCategories());
-            }
+            $categories = array_merge($categories, $article->getCategories());
         }
 
         sort($categories);
@@ -168,9 +162,7 @@ final class ItemListerFilesystem implements ItemListerInterface
         $tags     = [];
         $articles = $this->getArticles();
         foreach ($articles as $article) {
-            if ($article instanceof BlogArticle) {
-                $tags = array_merge($tags, $article->getTags());
-            }
+            $tags = array_merge($tags, $article->getTags());
         }
 
         sort($tags);

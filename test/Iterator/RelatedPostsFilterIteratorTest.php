@@ -23,6 +23,7 @@ use function sprintf;
 
 final class RelatedPostsFilterIteratorTest extends TestCase
 {
+  /** @var array<string,array<string,string>> */
     private array $structure;
 
     #[Override]
@@ -162,6 +163,10 @@ EOF;
         vfsStream::setup('root', null, $this->structure);
     }
 
+  /**
+   * @param array<string,string> $blogArticleData
+   * @param string[] $articleSlugs
+   */
     #[DataProvider('relatedPostDataProvider')]
     public function testCanFindRelatedPostsForCurrentPost(
         array $blogArticleData,
@@ -198,7 +203,6 @@ EOF;
 
   /**
    * @return ((string|string[])[]|int)[][]
-   * @psalm-return list{list{array{publishDate: '2015-01-01', slug: 'item-0003', title: 'BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001', content: string, synopsis: 'In this blogArticle, I have a fireside chat with internationally recognized PHP expert Paul M. Jones about one of his all-time favorite books, The Mythical Man Month.', image: 'http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0002.mp3', tags: list{'PHP', 'Docker'}, categories: list{'Software Development'}}, 1, list{'item-0004'}}}
    */
     public static function relatedPostDataProvider(): array
     {

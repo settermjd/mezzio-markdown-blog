@@ -13,19 +13,29 @@ use function get_class_vars;
 final class BlogArticle
 {
     private DateTime $publishDate;
-    private string $slug      = '';
-    private string $title     = '';
-    private string $image     = '';
-    private string $synopsis  = '';
-    private string $content   = '';
-    private array $categories = [];
-    private array $tags       = [];
+    private string $slug     = '';
+    private string $title    = '';
+    private string $image    = '';
+    private string $synopsis = '';
+    private string $content  = '';
 
+    /** @var string[] */
+    private array $categories = [];
+
+    /** @var string[] */
+    private array $tags = [];
+
+    /**
+     * @param array<string,list<string|null>|string> $options
+     */
     public function __construct(array $options = [])
     {
         $this->populate($options);
     }
 
+    /**
+     * @param array<string,string> $options
+     */
     public function populate(array $options = []): void
     {
         $properties = get_class_vars(self::class);
@@ -67,11 +77,17 @@ final class BlogArticle
         return $markdownParser->defaultTransform($this->content);
     }
 
+    /**
+     * @return string[]
+     */
     public function getTags(): array
     {
         return $this->tags;
     }
 
+    /**
+     * @return string[]
+     */
     public function getCategories(): array
     {
         return $this->categories;

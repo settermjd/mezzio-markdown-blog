@@ -11,7 +11,10 @@ use MarkdownBlog\Entity\BlogArticle;
 use Override;
 
 /**
- * @template-implements \FilterIterator
+ * @template TKey of int
+ * @template TValue of BlogArticle
+ * @template TIterator of Iterator
+ * @template-extends FilterIterator<TKey,TValue,TIterator>
  */
 final class UpcomingItemFilterIterator extends FilterIterator
 {
@@ -27,11 +30,8 @@ final class UpcomingItemFilterIterator extends FilterIterator
     #[Override]
     public function accept(): bool
     {
-        /** @var BlogArticle $episode */
-        $episode = $this->getInnerIterator()?->current();
+        $episode = $this->getInnerIterator()->current();
 
-        return $episode instanceof BlogArticle
-            ? $episode->getPublishDate() > new DateTime()
-            : false;
+        return $episode->getPublishDate() > new DateTime();
     }
 }
