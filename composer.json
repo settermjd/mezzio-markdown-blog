@@ -90,7 +90,9 @@
     },
     "scripts": {
         "check": [
-            "@test"
+            "@cs-check",
+            "@test",
+            "@static-analysis"
         ],
         "clear-config-cache": "php bin/clear-config-cache.php",
         "cs-check": "phpcs",
