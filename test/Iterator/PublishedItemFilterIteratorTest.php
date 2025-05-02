@@ -19,6 +19,7 @@ use function sprintf;
 
 final class PublishedItemFilterIteratorTest extends TestCase
 {
+  /** @var array<string,array<string,string>> */
     private array $structure;
 
     #[Override]

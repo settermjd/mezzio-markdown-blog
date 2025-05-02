@@ -7,6 +7,7 @@ namespace MarkdownBlog\Items;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use MarkdownBlog\Items\Adapter\ItemListerFilesystem;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -23,9 +24,9 @@ final class ItemListerFactory
      * The array has to have the following structure:
      *
      * 'blog' => [
-     * 'type' => 'filesystem',
-     * 'path' => __DIR__ . '/../../data/posts',
-     * 'parser' => Parser::class,
+     *     'type' => 'filesystem',
+     *     'path' => __DIR__ . '/../../data/posts',
+     *     'parser' => Parser::class,
      * ]
      *
      * @throws ContainerExceptionInterface
@@ -52,9 +53,6 @@ final class ItemListerFactory
                 $blogConfig['parser']
             ));
         }
-        if ($container->has(LoggerInterface::class)) {
-            $logger = $container->get(LoggerInterface::class);
-        }
 
         switch ($blogConfig['type']) {
             case 'filesystem':
@@ -63,8 +61,12 @@ final class ItemListerFactory
                     $blogConfig['path'],
                     $parser,
                     $inputFilter,
-                    array_key_exists('cache', $blogConfig) ? $blogConfig['cache'] : '',
-                    $logger ?? null
+                    $container->has(CacheItemPoolInterface::class)
+                        ? $container->get(CacheItemPoolInterface::class)
+                        : null,
+                    $container->has(LoggerInterface::class)
+                        ? $container->get(LoggerInterface::class)
+                        : null
                 );
         }
     }

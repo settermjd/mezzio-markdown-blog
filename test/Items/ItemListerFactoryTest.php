@@ -21,6 +21,7 @@ use function sprintf;
 
 final class ItemListerFactoryTest extends TestCase
 {
+    /** @var array<string,array<string,string|class-string>> */
     private array $config;
 
     #[Override]
@@ -51,10 +52,9 @@ final class ItemListerFactoryTest extends TestCase
                 $this->createMock(LoggerInterface::class)
             );
         $container
-            ->expects($this->once())
+            ->expects($this->atMost(2))
             ->method('has')
-            ->with(LoggerInterface::class)
-            ->willReturn(true);
+            ->willReturn(false, true);
 
         $factory    = new ItemListerFactory();
         $itemLister = $factory($container);
@@ -87,9 +87,9 @@ final class ItemListerFactoryTest extends TestCase
             );
 
         $container
-            ->expects($this->once())
+            ->expects($this->atMost(2))
             ->method('has')
-            ->willReturnOnConsecutiveCalls(false);
+            ->willReturnOnConsecutiveCalls(false, false);
 
         $factory = new ItemListerFactory();
         $factory($container);

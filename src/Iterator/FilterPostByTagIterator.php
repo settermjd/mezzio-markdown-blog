@@ -14,6 +14,12 @@ use function array_map;
 use function in_array;
 use function strtolower;
 
+/**
+ * @template TKey of int
+ * @template TValue of BlogArticle
+ * @template TIterator of Iterator
+ * @template-extends FilterIterator<TKey,TValue,TIterator>
+ */
 final class FilterPostByTagIterator extends FilterIterator
 {
     private string $tag;
@@ -31,11 +37,7 @@ final class FilterPostByTagIterator extends FilterIterator
     #[Override]
     public function accept(): bool
     {
-        $post = $this->getInnerIterator()?->current();
-
-        if (! $post instanceof BlogArticle) {
-            return false;
-        }
+        $post = $this->getInnerIterator()->current();
 
         // Filter out empty/null entries, which will break array_map's use of strtolower
         $tags = array_filter($post->getTags());

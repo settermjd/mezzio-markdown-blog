@@ -12,6 +12,7 @@ use function sprintf;
 
 trait DataTrait
 {
+  /** @var array<string,array<string,string>> */
     private array $structure;
 
     public function setupArticleData(): void

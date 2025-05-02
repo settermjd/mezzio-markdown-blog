@@ -14,6 +14,12 @@ use function array_map;
 use function in_array;
 use function strtolower;
 
+/**
+ * @template TKey of int
+ * @template TValue of BlogArticle
+ * @template TIterator of Iterator
+ * @template-extends FilterIterator<TKey,TValue,TIterator>
+ */
 final class FilterPostByCategoryIterator extends FilterIterator
 {
     private string $category;
@@ -32,10 +38,7 @@ final class FilterPostByCategoryIterator extends FilterIterator
     #[Override]
     public function accept(): bool
     {
-        $episode = $this->getInnerIterator()?->current();
-        if (! $episode instanceof BlogArticle) {
-            return false;
-        }
+        $episode = $this->getInnerIterator()->current();
 
         // Filter out empty/null entries, which will break array_map's use of strtolower
         $categories = array_filter($episode->getCategories());

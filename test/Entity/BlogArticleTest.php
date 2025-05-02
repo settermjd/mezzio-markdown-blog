@@ -14,6 +14,10 @@ use PHPUnit\Framework\TestCase;
  */
 final class BlogArticleTest extends TestCase
 {
+    /**
+     * @param array<string,string> $input
+     * @param array<string,string|string[]> $output
+     */
     #[DataProvider('blogArticleDataProvider')]
     public function testCanHydrateBlogArticleCorrectly(array $input, array $output): void
     {

@@ -33,6 +33,7 @@
         <exclude-pattern>test/InputFilter/BlogArticleInputFilterFactoryTest.php</exclude-pattern>
         <exclude-pattern>test/Items/Adapter/ItemListerFilesystemTest.php</exclude-pattern>
         <exclude-pattern>test/Items/ItemListerFactoryTest.php</exclude-pattern>
+        <exclude-pattern>test/Iterator/DataTrait.php</exclude-pattern>
         <exclude-pattern>test/Iterator/EpisodeFilterIteratorTest.php</exclude-pattern>
         <exclude-pattern>test/Iterator/FilterPostByCategoryIteratorTest.php</exclude-pattern>
         <exclude-pattern>test/Iterator/FilterPostByTagIteratorTest.php</exclude-pattern>

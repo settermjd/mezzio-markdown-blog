@@ -6,11 +6,18 @@ namespace MarkdownBlog\Iterator;
 
 use DirectoryIterator;
 use FilterIterator;
+use Iterator;
 use Override;
 use SplFileInfo;
 
 use function in_array;
 
+/**
+ * @template TKey of int
+ * @template TValue of SplFileInfo
+ * @template TIterator of Iterator
+ * @template-extends FilterIterator<TKey,TValue,TIterator>
+ */
 final class MarkdownFileFilterIterator extends FilterIterator
 {
     public function __construct(DirectoryIterator $iterator)
@@ -25,12 +32,7 @@ final class MarkdownFileFilterIterator extends FilterIterator
     #[Override]
     public function accept(): bool
     {
-        /** @var SplFileInfo $item */
         $item = $this->getInnerIterator()->current();
-
-        if (! $item instanceof SplFileInfo) {
-            return false;
-        }
 
         if (! $item->isFile() || ! $item->isReadable()) {
             return false;
