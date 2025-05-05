@@ -71,6 +71,21 @@ final class ItemListerFilesystem implements ItemListerInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getArticle(string $slug): BlogArticle|string
+    {
+        foreach ($this->episodeIterator as $file) {
+            $article = $this->buildArticleFromFile($file);
+            if ($article instanceof BlogArticle && $article->getSlug() === $slug) {
+                return $article;
+            }
+        }
+
+        return '';
+    }
+
+    /**
      * @return BlogArticle[]
      */
     protected function buildArticlesList(): array
