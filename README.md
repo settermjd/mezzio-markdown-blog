@@ -1,6 +1,6 @@
-# Markdown Blog
+# Mezzio Markdown Blog
 
-This is a Markdown-based blog module, one that does just the basics of converting a series of, minimalist, Markdown files with Yaml front-matter into an array of BlogArticle entities. 
+This is a Markdown-based blog module, one that does just the basics of converting a series of, minimalist, Markdown files with Yaml front-matter into an array of `BlogArticle` entities for use with [the Mezzio framework][mezzio-url]. 
 These entities can be used to provide a list of blog articles, or to render a given article.
 
 ## Usage
@@ -71,3 +71,5 @@ Then, use it as in the standalone version above, such as in the example below.
 /** @var \MarkdownBlog\Entity\BlogArticle $item */
 $items = $itemLister->getArticles();
 ```
+
+[mezzio-url]: https://docs.mezzio.dev/mezzio/
