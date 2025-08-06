@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlog\Items;
+namespace Settermjd\MarkdownBlog\Items;
 
-use MarkdownBlog\Entity\BlogArticle;
+use Settermjd\MarkdownBlog\Entity\BlogArticle;
 
 /**
  * Interface ItemListerInterface.

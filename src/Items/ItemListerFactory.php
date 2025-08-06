@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlog\Items;
+namespace Settermjd\MarkdownBlog\Items;
 
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
-use MarkdownBlog\Items\Adapter\ItemListerFilesystem;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
+use Settermjd\MarkdownBlog\Items\Adapter\ItemListerFilesystem;
 
 use function array_key_exists;
 use function sprintf;

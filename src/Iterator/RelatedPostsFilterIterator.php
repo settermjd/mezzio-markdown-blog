@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlog\Iterator;
+namespace Settermjd\MarkdownBlog\Iterator;
 
 use FilterIterator;
 use Iterator;
-use MarkdownBlog\Entity\BlogArticle;
-use Override;
+use Settermjd\MarkdownBlog\Entity\BlogArticle;
 
 use function array_intersect;
 
@@ -32,7 +31,6 @@ final class RelatedPostsFilterIterator extends FilterIterator
      * Allow an article if it has any of the same tags or categories but doesn't have the same slug,
      * i.e, isn't the same article.
      */
-    #[Override]
     public function accept(): bool
     {
         $post = $this->getInnerIterator()->current();

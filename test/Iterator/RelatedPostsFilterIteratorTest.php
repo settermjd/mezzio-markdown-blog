@@ -2,20 +2,19 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlogTest\Iterator;
+namespace Settermjd\MarkdownBlogTest\Iterator;
 
 use ArrayIterator;
 use DateInterval;
 use DateTime;
-use MarkdownBlog\Entity\BlogArticle;
-use MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
-use MarkdownBlog\Items\Adapter\ItemListerFilesystem;
-use MarkdownBlog\Iterator\RelatedPostsFilterIterator;
 use Mni\FrontYAML\Parser;
 use org\bovigo\vfs\vfsStream;
-use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Settermjd\MarkdownBlog\Entity\BlogArticle;
+use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
+use Settermjd\MarkdownBlog\Items\Adapter\ItemListerFilesystem;
+use Settermjd\MarkdownBlog\Iterator\RelatedPostsFilterIterator;
 
 use function array_filter;
 use function iterator_to_array;
@@ -26,7 +25,6 @@ final class RelatedPostsFilterIteratorTest extends TestCase
   /** @var array<string,array<string,string>> */
     private array $structure;
 
-    #[Override]
     protected function setUp(): void
     {
         $item001Content = <<<EOF

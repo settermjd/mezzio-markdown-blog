@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlog\Iterator;
+namespace Settermjd\MarkdownBlog\Iterator;
 
 use DateTime;
 use FilterIterator;
 use Iterator;
-use MarkdownBlog\Entity\BlogArticle;
-use Override;
+use Settermjd\MarkdownBlog\Entity\BlogArticle;
 
 /**
  * @template TKey of int
@@ -27,7 +26,6 @@ final class UpcomingItemFilterIterator extends FilterIterator
     /**
      * Determine if the current episode has a publish date of later than today.
      */
-    #[Override]
     public function accept(): bool
     {
         $episode = $this->getInnerIterator()->current();

@@ -2,30 +2,28 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlogTest\Items\Adapter;
+namespace Settermjd\MarkdownBlogTest\Items\Adapter;
 
 use DateInterval;
 use DateTime;
-use MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
-use MarkdownBlog\Items\Adapter\ItemListerFilesystem;
 use Mni\FrontYAML\Parser;
 use org\bovigo\vfs\vfsStream;
-use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
+use Settermjd\MarkdownBlog\Items\Adapter\ItemListerFilesystem;
 
 use function sprintf;
 
 /**
- * @coversDefaultClass \MarkdownBlog\Items\Adapter\ItemListerFilesystem
+ * @coversDefaultClass ItemListerFilesystem
  */
 final class ItemListerFilesystemTest extends TestCase
 {
     /** @var array<string,array<string,string>> */
     private array $structure;
 
-    #[Override]
     protected function setUp(): void
     {
         $item001Content = <<<EOF

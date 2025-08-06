@@ -80,12 +80,12 @@
     },
     "autoload": {
         "psr-4": {
-            "MarkdownBlog\\": "src/"
+            "Settermjd\\MarkdownBlog\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "MarkdownBlogTest\\": "test/"
+            "Settermjd\\MarkdownBlogTest\\": "test/"
         }
     },
     "scripts": {
@@ -97,7 +97,7 @@
         "clear-config-cache": "php bin/clear-config-cache.php",
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
-        "static-analysis": "phpstan analyse --level 5 src test",
+        "static-analysis": "phpstan analyse --memory-limit 256M --level 5 src test",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },

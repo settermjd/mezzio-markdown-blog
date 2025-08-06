@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlog\Iterator;
+namespace Settermjd\MarkdownBlog\Iterator;
 
 use DirectoryIterator;
 use FilterIterator;
 use Iterator;
-use Override;
 use SplFileInfo;
 
 use function in_array;
@@ -29,7 +28,6 @@ final class MarkdownFileFilterIterator extends FilterIterator
     /**
      * Determine what is a valid element in this iterator.
      */
-    #[Override]
     public function accept(): bool
     {
         $item = $this->getInnerIterator()->current();

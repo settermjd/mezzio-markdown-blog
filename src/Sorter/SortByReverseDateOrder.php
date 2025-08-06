@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlog\Sorter;
+namespace Settermjd\MarkdownBlog\Sorter;
 
 use Exception;
-use MarkdownBlog\Entity\BlogArticle;
+use Settermjd\MarkdownBlog\Entity\BlogArticle;
 
 /**
  * A simple invokable class to help sort a list of episodes.

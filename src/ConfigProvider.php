@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlog;
+namespace Settermjd\MarkdownBlog;
 
 use Laminas\InputFilter\InputFilterInterface;
-use MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
-use MarkdownBlog\Items\ItemListerFactory;
-use MarkdownBlog\Items\ItemListerInterface;
+use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
+use Settermjd\MarkdownBlog\Items\ItemListerFactory;
+use Settermjd\MarkdownBlog\Items\ItemListerInterface;
 
 /**
  * The configuration provider for the MarkdownBlog module

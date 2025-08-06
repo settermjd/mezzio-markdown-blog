@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlog\Iterator;
+namespace Settermjd\MarkdownBlog\Iterator;
 
 use Countable;
 use DateTime;
 use Exception;
 use FilterIterator;
 use Iterator;
-use MarkdownBlog\Entity\BlogArticle;
-use Override;
+use Settermjd\MarkdownBlog\Entity\BlogArticle;
 
 use function iterator_count;
 
@@ -33,7 +32,6 @@ final class PublishedItemFilterIterator extends FilterIterator implements Counta
      *
      * @throws Exception
      */
-    #[Override]
     public function accept(): bool
     {
         $episode = $this->getInnerIterator()->current();

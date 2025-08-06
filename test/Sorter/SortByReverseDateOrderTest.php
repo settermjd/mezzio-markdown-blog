@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlogTest\Sorter;
+namespace Settermjd\MarkdownBlogTest\Sorter;
 
 use DateTime;
-use MarkdownBlog\Entity\BlogArticle;
-use MarkdownBlog\Sorter\SortByReverseDateOrder;
 use PHPUnit\Framework\TestCase;
+use Settermjd\MarkdownBlog\Entity\BlogArticle;
+use Settermjd\MarkdownBlog\Sorter\SortByReverseDateOrder;
 
 use function array_shift;
 use function PHPUnit\Framework\assertInstanceOf;
