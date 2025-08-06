@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlog\Items\Adapter;
+namespace Settermjd\MarkdownBlog\Items\Adapter;
 
 use DirectoryIterator;
 use Laminas\Hydrator\ArraySerializableHydrator;
 use Laminas\InputFilter\InputFilterInterface;
-use MarkdownBlog\Entity\BlogArticle;
-use MarkdownBlog\Items\ItemListerInterface;
-use MarkdownBlog\Iterator\MarkdownFileFilterIterator;
 use Mni\FrontYAML\Document;
 use Mni\FrontYAML\Parser;
 use Override;
 use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
+use Settermjd\MarkdownBlog\Entity\BlogArticle;
+use Settermjd\MarkdownBlog\Items\ItemListerInterface;
+use Settermjd\MarkdownBlog\Iterator\MarkdownFileFilterIterator;
 use SplFileInfo;
 
 use function array_merge;

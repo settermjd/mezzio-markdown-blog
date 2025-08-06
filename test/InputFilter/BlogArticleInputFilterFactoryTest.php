@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlogTest\InputFilter;
+namespace Settermjd\MarkdownBlogTest\InputFilter;
 
-use MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 
 use function array_key_exists;
 

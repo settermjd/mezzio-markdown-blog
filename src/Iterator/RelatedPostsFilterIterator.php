@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlog\Iterator;
+namespace Settermjd\MarkdownBlog\Iterator;
 
 use FilterIterator;
 use Iterator;
-use MarkdownBlog\Entity\BlogArticle;
-use Override;
+use Settermjd\MarkdownBlog\Entity\BlogArticle;
 
 use function array_intersect;
 

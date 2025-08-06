@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlog\InputFilter;
+namespace Settermjd\MarkdownBlog\InputFilter;
 
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripNewlines;

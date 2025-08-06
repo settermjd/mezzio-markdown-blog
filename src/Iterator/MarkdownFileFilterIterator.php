@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlog\Iterator;
+namespace Settermjd\MarkdownBlog\Iterator;
 
 use DirectoryIterator;
 use FilterIterator;

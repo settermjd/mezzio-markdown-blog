@@ -80,12 +80,12 @@
     },
     "autoload": {
         "psr-4": {
-            "MarkdownBlog\\": "src/"
+            "Settermjd\\MarkdownBlog\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "MarkdownBlogTest\\": "test/"
+            "Settermjd\\MarkdownBlogTest\\": "test/"
         }
     },
     "scripts": {

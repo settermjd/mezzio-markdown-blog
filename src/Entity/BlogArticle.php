@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlog\Entity;
+namespace Settermjd\MarkdownBlog\Entity;
 
 use DateTime;
 use Michelf\MarkdownExtra;

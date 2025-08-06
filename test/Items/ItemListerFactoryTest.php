@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlogTest\Items;
+namespace Settermjd\MarkdownBlogTest\Items;
 
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
-use MarkdownBlog\Items\Adapter\ItemListerFilesystem;
-use MarkdownBlog\Items\ItemListerFactory;
 use Mni\FrontYAML\Parser;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -15,6 +13,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Settermjd\MarkdownBlog\Items\Adapter\ItemListerFilesystem;
+use Settermjd\MarkdownBlog\Items\ItemListerFactory;
 use UnexpectedValueException;
 
 use function sprintf;

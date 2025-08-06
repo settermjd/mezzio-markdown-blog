@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlogTest\Iterator;
+namespace Settermjd\MarkdownBlogTest\Iterator;
 
 use ArrayIterator;
 use DateInterval;
 use DateTime;
-use MarkdownBlog\Entity\BlogArticle;
-use MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
-use MarkdownBlog\Items\Adapter\ItemListerFilesystem;
-use MarkdownBlog\Items\ItemListerInterface;
-use MarkdownBlog\Iterator\FilterPostByTagIterator;
-use MarkdownBlog\Iterator\PublishedItemFilterIterator;
 use Mni\FrontYAML\Parser;
 use org\bovigo\vfs\vfsStream;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Settermjd\MarkdownBlog\Entity\BlogArticle;
+use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
+use Settermjd\MarkdownBlog\Items\Adapter\ItemListerFilesystem;
+use Settermjd\MarkdownBlog\Items\ItemListerInterface;
+use Settermjd\MarkdownBlog\Iterator\FilterPostByTagIterator;
+use Settermjd\MarkdownBlog\Iterator\PublishedItemFilterIterator;
 
 use function sprintf;
 

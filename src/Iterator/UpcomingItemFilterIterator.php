@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlog\Iterator;
+namespace Settermjd\MarkdownBlog\Iterator;
 
 use DateTime;
 use FilterIterator;
 use Iterator;
-use MarkdownBlog\Entity\BlogArticle;
-use Override;
+use Settermjd\MarkdownBlog\Entity\BlogArticle;
 
 /**
  * @template TKey of int

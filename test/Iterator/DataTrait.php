@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlogTest\Iterator;
+namespace Settermjd\MarkdownBlogTest\Iterator;
 
 use DateInterval;
 use DateTime;

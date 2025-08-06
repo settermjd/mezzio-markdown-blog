@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace MarkdownBlogTest\Entity;
+namespace Settermjd\MarkdownBlogTest\Entity;
 
 use DateTime;
-use MarkdownBlog\Entity\BlogArticle;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Settermjd\MarkdownBlog\Entity\BlogArticle;
 
 /**
- * @coversDefaultClass \MarkdownBlog\Entity\BlogArticle
+ * @coversDefaultClass BlogArticle
  */
 final class BlogArticleTest extends TestCase
 {
