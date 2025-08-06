@@ -32,7 +32,6 @@ final class PublishedItemFilterIterator extends FilterIterator implements Counta
      *
      * @throws Exception
      */
-    #[Override]
     public function accept(): bool
     {
         $episode = $this->getInnerIterator()->current();

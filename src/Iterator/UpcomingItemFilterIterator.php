@@ -26,7 +26,6 @@ final class UpcomingItemFilterIterator extends FilterIterator
     /**
      * Determine if the current episode has a publish date of later than today.
      */
-    #[Override]
     public function accept(): bool
     {
         $episode = $this->getInnerIterator()->current();

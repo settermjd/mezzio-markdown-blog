@@ -9,7 +9,6 @@ use DateInterval;
 use DateTime;
 use Mni\FrontYAML\Parser;
 use org\bovigo\vfs\vfsStream;
-use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
@@ -23,7 +22,6 @@ final class FilterPostByCategoryIteratorTest extends TestCase
   /** @var array<string,array<string,string>> */
     private array $structure;
 
-    #[Override]
     protected function setUp(): void
     {
         $item001Content = <<<EOF

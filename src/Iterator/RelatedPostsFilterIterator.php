@@ -31,7 +31,6 @@ final class RelatedPostsFilterIterator extends FilterIterator
      * Allow an article if it has any of the same tags or categories but doesn't have the same slug,
      * i.e, isn't the same article.
      */
-    #[Override]
     public function accept(): bool
     {
         $post = $this->getInnerIterator()->current();

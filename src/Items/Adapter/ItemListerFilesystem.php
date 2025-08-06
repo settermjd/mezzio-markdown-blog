@@ -9,7 +9,6 @@ use Laminas\Hydrator\ArraySerializableHydrator;
 use Laminas\InputFilter\InputFilterInterface;
 use Mni\FrontYAML\Document;
 use Mni\FrontYAML\Parser;
-use Override;
 use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
 use Settermjd\MarkdownBlog\Entity\BlogArticle;
@@ -55,7 +54,6 @@ final class ItemListerFilesystem implements ItemListerInterface
      *
      * @return array<int,BlogArticle>
      */
-    #[Override]
     public function getArticles(string $cacheKeySuffix = self::CACHE_KEY_SUFFIX_ALL): array
     {
         if ($this->cache) {
@@ -150,7 +148,6 @@ final class ItemListerFilesystem implements ItemListerInterface
     /**
      * @inheritDoc
      */
-    #[Override]
     public function getCategories(): array
     {
         $categories = [];
@@ -166,7 +163,6 @@ final class ItemListerFilesystem implements ItemListerInterface
     /**
      * @inheritDoc
      */
-    #[Override]
     public function getTags(): array
     {
         $tags     = [];

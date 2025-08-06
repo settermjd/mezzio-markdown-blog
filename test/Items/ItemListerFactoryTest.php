@@ -7,7 +7,6 @@ namespace Settermjd\MarkdownBlogTest\Items;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Mni\FrontYAML\Parser;
-use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +23,6 @@ final class ItemListerFactoryTest extends TestCase
     /** @var array<string,array<string,string|class-string>> */
     private array $config;
 
-    #[Override]
     public function setUp(): void
     {
         $this->config = [

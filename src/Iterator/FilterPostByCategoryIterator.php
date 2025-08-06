@@ -34,7 +34,6 @@ final class FilterPostByCategoryIterator extends FilterIterator
      * Filter out articles that don't have a matching category.
      * A lowercase comparison is made to reduce the likelihood of false negative matches.
      */
-    #[Override]
     public function accept(): bool
     {
         $episode = $this->getInnerIterator()->current();

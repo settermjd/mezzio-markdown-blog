@@ -7,7 +7,6 @@ namespace Settermjd\MarkdownBlogTest\Iterator;
 use ArrayIterator;
 use Mni\FrontYAML\Parser;
 use org\bovigo\vfs\vfsStream;
-use Override;
 use PHPUnit\Framework\TestCase;
 use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use Settermjd\MarkdownBlog\Items\Adapter\ItemListerFilesystem;
@@ -21,7 +20,6 @@ final class EpisodeFilterIteratorTest extends TestCase
 {
     use DataTrait;
 
-    #[Override]
     protected function setUp(): void
     {
         $this->setupArticleData();
