@@ -37,7 +37,9 @@
                 "laminas/laminas-httphandlerrunner",
                 "mezzio/mezzio-fastroute",
                 "mezzio/mezzio-twigrenderer"
-            ]
+            ],
+            "component": "Settermjd\\MarkdownBlog",
+            "config-provider": "Settermjd\\MarkdownBlog\\ConfigProvider"
         }
     },
     "require": {
