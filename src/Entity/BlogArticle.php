@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Settermjd\MarkdownBlog\Entity;
 
+use DateMalformedStringException;
 use DateTime;
 use Michelf\MarkdownExtra;
 
@@ -27,6 +28,7 @@ final class BlogArticle
 
     /**
      * @param array<string,list<string|null>|string> $options
+     * @throws DateMalformedStringException
      */
     public function __construct(array $options = [])
     {
@@ -35,6 +37,7 @@ final class BlogArticle
 
     /**
      * @param array<string,string> $options
+     * @throws DateMalformedStringException
      */
     public function populate(array $options = []): void
     {
