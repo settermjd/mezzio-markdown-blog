@@ -52,28 +52,8 @@ Given that, most of the work is done for you, including registering the routes a
 
 Now, there are two things that you need to do:
 
-- [Provide the package’s configuration](#install-step-one)
 - [Set up the articles directory](#install-step-two)
 - [Override the default templates](#install-step-three)
-
-<!-- markdownlint-disable MD033 -->
-<a name="install-step-one"></a>
-<!-- markdownlint-enable MD033 -->
-### Update the application's configuration
-
-Now, add a configuration entry to your application's configuration that has the following structure.
-
-```php
-use Mni\FrontYAML\Parser;
-
-return [
-    'blog' => [
-        'type' => 'filesystem',
-        'path' => __DIR__ . '/../../data/posts',
-        'parser' => Parser::class,
-    ]
-];
-```
 
 <!-- markdownlint-disable MD033 -->
 <a name="install-step-two"></a>
@@ -112,6 +92,13 @@ The three templates are:
 > - One for [Twig][twig-url]
 > - One for [laminas-view][laminas-view-url]
 > - One for [Plates][plates-url]
+
+### Update the application's configuration (_optional_)
+
+If you want or need to, you can also update the module's configuration as well.
+By default, its configuration is set in `Settermjd\MarkdownBlog\ConfigProvider`.
+However, you can override this by copying the default configuration file, _config/autoload/blog.local.php_ to the application's _config/autoload_ directory.
+You can find documentation for each option in both the config file and in `Settermjd\MarkdownBlog\ConfigProvider`.
 
 ### When using Twig as your view renderer
 

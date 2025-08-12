@@ -8,6 +8,7 @@ use Laminas\InputFilter\InputFilterInterface;
 use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
 use Mezzio\Application;
 use Mezzio\Container\ApplicationConfigInjectionDelegator;
+use Mni\FrontYAML\Parser;
 use Settermjd\MarkdownBlog\Handler\BlogArticleHandler;
 use Settermjd\MarkdownBlog\Handler\BlogIndexHandler;
 use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
@@ -27,11 +28,12 @@ final class ConfigProvider
      * To add a bit of a structure, each section is defined in a separate
      * method which returns an array with its configuration.
      *
-     * @return string[][][]
+     * @return array{"blog": array, "dependencies"?: array, "routes"?: array, "templates"?: array}
      */
     public function __invoke(): array
     {
         return [
+            'blog'         => $this->getBlogConfig(),
             'dependencies' => $this->getDependencies(),
             'routes'       => $this->getRoutes(),
             'templates'    => $this->getTemplates(),
@@ -94,9 +96,43 @@ final class ConfigProvider
         return [
             'paths' => [
                 'blog' => [
-                    __DIR__ . '/../templates/blog'
+                    __DIR__ . '/../templates/blog',
                 ],
             ],
+        ];
+    }
+
+    /**
+     * getBlogConfig returns a default configuration for the blog.
+     *
+     * This avoids users having to copy a config file to their local config/autoload directory.
+     * However, a default file is provided in the package's config/autoload directory.
+     *
+     * @return array{"type": string, "path": string, "parser": class-string}
+     */
+    public function getBlogConfig(): array
+    {
+        return [
+            /**
+             * Setting type to 'filesystem', which currently is the only choice,
+             * will invoke the ItemListerFilesystem adapter to retrieve blog files
+             * from the local filesystem.
+             */
+            'type' => 'filesystem',
+
+            /**
+             * 'path' sets the path on the local filesystem to retrieve the Markdown
+             * files from. This directory needs to be manually initialised before it
+             * can be used.
+             */
+            'path' => __DIR__ . '/../../../data/posts',
+
+            /**
+             * 'parser' is the class to use to parse the Markdown file's YAML front-matter.
+             * In future releases, other front-matter formats may be supported. However,
+             * for the time being, only YAML is supported.
+             */
+            'parser' => Parser::class,
         ];
     }
 }

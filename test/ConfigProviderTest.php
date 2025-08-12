@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Settermjd\MarkdownBlogTest;
@@ -6,9 +7,11 @@ namespace Settermjd\MarkdownBlogTest;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
 use Mezzio\Application;
-use Settermjd\MarkdownBlog\ConfigProvider;
 use PHPUnit\Framework\TestCase;
+use Settermjd\MarkdownBlog\ConfigProvider;
 use Settermjd\MarkdownBlog\Items\ItemListerInterface;
+
+use function array_keys;
 
 class ConfigProviderTest extends TestCase
 {
@@ -38,7 +41,8 @@ class ConfigProviderTest extends TestCase
             $dependencies['factories'],
         );
         $this->assertArrayHasKey(
-            Application::class, $dependencies['delegators'],
+            Application::class,
+            $dependencies['delegators'],
         );
 
         $routes = $configProvider->getRoutes();
