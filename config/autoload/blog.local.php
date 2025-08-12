@@ -13,14 +13,14 @@ return [
          * will invoke the ItemListerFilesystem adapter to retrieve blog files
          * from the local filesystem.
          */
-        'type' => 'filesystem',
+        'type' => $_ENV['BLOG_ADAPTER_TYPE'] ?? 'filesystem',
 
         /**
          * 'path' sets the path on the local filesystem to retrieve the Markdown
          * files from. This directory needs to be manually initialised before it
          * can be used.
          */
-        'path' => __DIR__ . '/../../../data/posts',
+        'path' => __DIR__ . '/../../../' . $_ENV['BLOG_POSTS_DIR'] ?? __DIR__ . '/../../../data/posts',
 
         /**
          * 'parser' is the class to use to parse the Markdown file's YAML front-matter.

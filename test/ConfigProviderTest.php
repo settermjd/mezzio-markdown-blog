@@ -7,6 +7,7 @@ namespace Settermjd\MarkdownBlogTest;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
 use Mezzio\Application;
+use Mni\FrontYAML\Parser;
 use PHPUnit\Framework\TestCase;
 use Settermjd\MarkdownBlog\ConfigProvider;
 use Settermjd\MarkdownBlog\Items\ItemListerInterface;
@@ -47,5 +48,11 @@ class ConfigProviderTest extends TestCase
 
         $routes = $configProvider->getRoutes();
         $this->assertCount(2, $routes);
+
+        $config = $configProvider();
+        $this->assertArrayHasKey('blog', $config);
+        $this->assertSame('filesystem', $config['blog']['type']);
+        $this->assertTrue(str_ends_with($config['blog']['path'], '/../../../data/posts'));
+        $this->assertSame(Parser::class, $config['blog']['parser']);
     }
 }
