@@ -47,14 +47,13 @@
         "composer/package-versions-deprecated": "^1.11.99.5",
         "laminas/laminas-component-installer": "^3.5.0",
         "laminas/laminas-config-aggregator": "^1.18.0",
-        "laminas/laminas-diactoros": "^3.5.0",
+        "laminas/laminas-diactoros": "^3.6.0",
         "laminas/laminas-hydrator": "^4.16.0",
-        "laminas/laminas-inputfilter": "^2.32.0",
-        "laminas/laminas-servicemanager": "^3.23.0",
+        "laminas/laminas-servicemanager": "dev-remove-duplicate-delegators-fix",
         "laminas/laminas-stdlib": "^3.20.0",
-        "mezzio/mezzio": "^3.20.1",
-        "mezzio/mezzio-fastroute": "^3.12.0",
-        "mezzio/mezzio-helpers": "^5.17.0",
+        "mezzio/mezzio": "^3.21.0",
+        "mezzio/mezzio-fastroute": "^3.13.0",
+        "mezzio/mezzio-helpers": "^5.18.0",
         "mezzio/mezzio-twigrenderer": "^2.17.0",
         "michelf/php-markdown": "^2.0.0",
         "mnapoli/front-yaml": "dev-add-php-8.4-support",
@@ -64,20 +63,20 @@
         "zetacomponents/feed": "^1.4.5"
     },
     "require-dev": {
-        "filp/whoops": "^2.18.0",
-        "friendsofphp/php-cs-fixer": "^3.75",
-        "laminas/laminas-coding-standard": "^3.0.1",
-        "laminas/laminas-development-mode": "^3.13.0",
-        "mezzio/mezzio-tooling": "^2.10.1",
+        "filp/whoops": "^2.18.4",
+        "friendsofphp/php-cs-fixer": "^3.85.1",
+        "laminas/laminas-coding-standard": "^3.1.0",
+        "laminas/laminas-development-mode": "^3.14.0",
+        "mezzio/mezzio-tooling": "^2.11.0",
         "mikey179/vfsstream": "^1.6.12",
         "mockery/mockery": "^1.6.12",
-        "phpstan/phpdoc-parser": "^2.1",
-        "phpstan/phpstan": "^2.1",
-        "phpstan/phpstan-deprecation-rules": "^2.0",
-        "phpstan/phpstan-phpunit": "^2.0",
-        "phpunit/phpunit": "^12.1.3",
+        "phpstan/phpdoc-parser": "^2.2",
+        "phpstan/phpstan": "^2.1.22",
+        "phpstan/phpstan-deprecation-rules": "^2.0.3",
+        "phpstan/phpstan-phpunit": "^2.0.7",
+        "phpunit/phpunit": "^12.3.3",
         "psalm/plugin-phpunit": "^0.19.5",
-        "rector/rector": "^2.0.12",
+        "rector/rector": "^2.1.2",
         "roave/security-advisories": "dev-master"
     },
     "autoload": {
@@ -107,6 +106,11 @@
         {
             "type": "vcs",
             "url": "git@github.com:settermjd/FrontYAML.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:settermjd/laminas-servicemanager.git",
+            "canonical": false
         }
     ]
 }
