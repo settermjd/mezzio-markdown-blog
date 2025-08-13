@@ -60,6 +60,7 @@
         "monolog/monolog": "^3.9",
         "psr/cache": "^3.0",
         "psr/simple-cache": "^3.0",
+        "twig/intl-extra": "^3.21",
         "zetacomponents/feed": "^1.4.5"
     },
     "require-dev": {
