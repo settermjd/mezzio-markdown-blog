@@ -14,6 +14,7 @@ use Settermjd\MarkdownBlog\Handler\BlogIndexHandler;
 use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use Settermjd\MarkdownBlog\Items\ItemListerFactory;
 use Settermjd\MarkdownBlog\Items\ItemListerInterface;
+use Twig\Extra\Intl\IntlExtension;
 
 /**
  * The configuration provider for the module
@@ -37,6 +38,7 @@ final class ConfigProvider
             'dependencies' => $this->getDependencies(),
             'routes'       => $this->getRoutes(),
             'templates'    => $this->getTemplates(),
+            'twig'         => $this->getTwigConfig(),
         ];
     }
 
@@ -136,6 +138,23 @@ final class ConfigProvider
              * for the time being, only YAML is supported.
              */
             'parser' => Parser::class,
+        ];
+    }
+
+    /**
+     * getTwigConfig returns a default configuration for Twig
+     *
+     * This avoids users having to copy a config file to their local config/autoload directory.
+     * However, a default file is provided in the package's config/autoload directory.
+     *
+     * @return array{"type": string, "path": string, "parser": class-string}
+     */
+    public function getTwigConfig(): array
+    {
+        return [
+            'extensions' => [
+                new IntlExtension(),
+            ],
         ];
     }
 }
