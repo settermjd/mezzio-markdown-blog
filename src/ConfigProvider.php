@@ -15,6 +15,10 @@ use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use Settermjd\MarkdownBlog\Items\ItemListerFactory;
 use Settermjd\MarkdownBlog\Items\ItemListerInterface;
 use Twig\Extra\Intl\IntlExtension;
+use Twig\Extra\Markdown\DefaultMarkdown;
+use Twig\Extra\Markdown\MarkdownExtension;
+use Twig\Extra\Markdown\MarkdownRuntime;
+use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 /**
  * The configuration provider for the module
@@ -147,14 +151,24 @@ final class ConfigProvider
      * This avoids users having to copy a config file to their local config/autoload directory.
      * However, a default file is provided in the package's config/autoload directory.
      *
-     * @return array{"type": string, "path": string, "parser": class-string}
+     * @return array{"extensions": string, "runtime_loaders": string}
      */
     public function getTwigConfig(): array
     {
         return [
             'extensions' => [
                 new IntlExtension(),
+                new MarkdownExtension(),
             ],
+            'runtime_loaders' => [
+                new class implements RuntimeLoaderInterface {
+                    public function load($class) {
+                        if (MarkdownRuntime::class === $class) {
+                            return new MarkdownRuntime(new DefaultMarkdown());
+                        }
+                    }
+                }
+            ]
         ];
     }
 }
