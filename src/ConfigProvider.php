@@ -43,7 +43,7 @@ final class ConfigProvider
     /**
      * Returns the container dependencies
      *
-     * @return array<string,array<int,class-string|class-string,array<int,class-string>|class-string,class-string>>
+     * @return array{"abstract_factories"?: array, "delegators"?: array, "factories"?: array}
      */
     public function getDependencies(): array
     {
@@ -63,6 +63,9 @@ final class ConfigProvider
         ];
     }
 
+    /**
+     * @return array<int,array<string,string|array<int,class-string|string>>>
+     */
     public function getRoutes(): array
     {
         return [

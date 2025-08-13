@@ -13,6 +13,7 @@ use Settermjd\MarkdownBlog\ConfigProvider;
 use Settermjd\MarkdownBlog\Items\ItemListerInterface;
 
 use function array_keys;
+use function str_ends_with;
 
 class ConfigProviderTest extends TestCase
 {
