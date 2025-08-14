@@ -1,7 +1,8 @@
 <!-- markdownlint-disable MD013 -->
 # Mezzio Markdown Blog
 
-This is a Markdown-based blog module, one that provides the basics of converting a series of, minimalist, Markdown files with Yaml front-matter into an array of `BlogArticle` entities.
+This is a blog module for Mezzio applications.
+It provides the basics of converting a series of, minimalist, Markdown files with Yaml front-matter into an array of `BlogArticle` entities.
 These entities can be used to provide a list of blog articles, or to render a given article.
 
 Here is a sample article, so that you know, roughly, what to expect.
@@ -25,7 +26,7 @@ Suspendisse viverra mauris ac urna gravida, vel malesuada dolor interdum. Nullam
 
 ### Related Links
 
-- [The Mythical Man Month (on Wikipedia)](https://en.wikipedia.org/wiki/The_Mythical_Man-Month)
+- [The Mythical Man Month (on Wikipedia)][mythical-man-month-book-url]
 ```
 
 ## Usage
@@ -104,8 +105,7 @@ You can find documentation for each option in both the config file and in `Sette
 
 If you use Twig as your view renderer, while you don't need to, you can create more feature-rich templates by installing [PHP's Intl extension][php-intl-ext-url], and the [twig/markdown-extra][twig-markdown-extra-ext-url] and [twig/intl-extra][twig-intl-ext-url] packages.
 
-You can install PHP's Intl extension using your package manager or from source.
-You can install the two Twig packages using the following command:
+After installing PHP's Intl extension using your package manager or from source, install the two Twig packages using the following command:
 
 ```bash
 composer require twig/intl-extra twig/markdown-extra
@@ -114,6 +114,7 @@ composer require twig/intl-extra twig/markdown-extra
 <!-- Document links -->
 [laminas-view-url]: https://docs.laminas.dev/laminas-view/
 [mezzio-url]: https://docs.mezzio.dev/mezzio/
+[mythical-man-month-book-url]: https://en.wikipedia.org/wiki/The_Mythical_Man-Month
 [php-intl-ext-url]: https://www.php.net/manual/en/intro.intl.php
 [plates-url]: https://platesphp.com/
 [twig-intl-ext-url]: https://github.com/twigphp/intl-extra
