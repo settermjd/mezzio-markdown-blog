@@ -108,6 +108,11 @@
         {
             "type": "vcs",
             "url": "git@github.com:settermjd/FrontYAML.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:settermjd/laminas-servicemanager.git",
+            "canonical": false
         }
     ]
 }
