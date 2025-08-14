@@ -43,14 +43,14 @@
         }
     },
     "require": {
-        "php": "~8.1.0||~8.2.0||~8.3.0||~8.4.0",
+        "php": "~8.3.0||~8.4.0",
         "composer/package-versions-deprecated": "^1.11.99.5",
         "laminas/laminas-component-installer": "^3.5.0",
         "laminas/laminas-config-aggregator": "^1.18.0",
         "laminas/laminas-diactoros": "^3.6.0",
         "laminas/laminas-hydrator": "^4.16.0",
-        "laminas/laminas-servicemanager": "dev-remove-duplicate-delegators-fix",
-        "laminas/laminas-stdlib": "^3.20.0",
+        "laminas/laminas-inputfilter": "^2.33.0",
+        "laminas/laminas-servicemanager": "^3.23.1",
         "mezzio/mezzio": "^3.21.0",
         "mezzio/mezzio-fastroute": "^3.13.0",
         "mezzio/mezzio-helpers": "^5.18.0",
@@ -60,6 +60,8 @@
         "monolog/monolog": "^3.9",
         "psr/cache": "^3.0",
         "psr/simple-cache": "^3.0",
+        "twig/intl-extra": "^3.21",
+        "twig/markdown-extra": "^3.21",
         "zetacomponents/feed": "^1.4.5"
     },
     "require-dev": {
@@ -74,7 +76,7 @@
         "phpstan/phpstan": "^2.1.22",
         "phpstan/phpstan-deprecation-rules": "^2.0.3",
         "phpstan/phpstan-phpunit": "^2.0.7",
-        "phpunit/phpunit": "^12.3.3",
+        "phpunit/phpunit": "^12.3.4",
         "psalm/plugin-phpunit": "^0.19.5",
         "rector/rector": "^2.1.2",
         "roave/security-advisories": "dev-master"

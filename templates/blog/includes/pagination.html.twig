@@ -1,0 +1,34 @@
+{% if pageCount is defined and not pageCount is empty and pageCount > 1 %}
+    <nav>
+        <ul>
+            <!-- Previous page link -->
+            {% if previous is defined and not previous is empty %}
+                <li>
+                    <a>&Larr;</a>
+                </li>
+            {% endif %}
+
+            <!-- Numbered page links -->
+            {% for page in range(1, pageCount)%}
+                {% if page != current %}
+                    <li>
+                        <a>
+                            {{ page }}
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <span>{{ page }}</span>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            <!-- Next page link -->
+            {% if next is defined and not next is empty %}
+                <li>
+                    <a>&Rarr;</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
