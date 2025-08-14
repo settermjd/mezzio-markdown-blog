@@ -121,6 +121,8 @@ final class ConfigProvider
      */
     public function getBlogConfig(): array
     {
+        $path = $_ENV['BLOG_POSTS_DIR'] ?? 'data/posts';
+
         return [
             /**
              * Setting type to 'filesystem', which currently is the only choice,
@@ -134,7 +136,7 @@ final class ConfigProvider
              * files from. This directory needs to be manually initialised before it
              * can be used.
              */
-            'path' => __DIR__ . '/../../../' . $_ENV['BLOG_POSTS_DIR'] ?? __DIR__ . '/../../../data/posts',
+            'path' => __DIR__ . '/../../../' . $path,
 
             /**
              * 'parser' is the class to use to parse the Markdown file's YAML front-matter.
@@ -151,24 +153,25 @@ final class ConfigProvider
      * This avoids users having to copy a config file to their local config/autoload directory.
      * However, a default file is provided in the package's config/autoload directory.
      *
-     * @return array{"extensions": string, "runtime_loaders": string}
+     * @return array{"extensions": array, "runtime_loaders": array}
      */
     public function getTwigConfig(): array
     {
         return [
-            'extensions' => [
+            'extensions'      => [
                 new IntlExtension(),
                 new MarkdownExtension(),
             ],
             'runtime_loaders' => [
                 new class implements RuntimeLoaderInterface {
-                    public function load($class) {
-                        if (MarkdownRuntime::class === $class) {
-                            return new MarkdownRuntime(new DefaultMarkdown());
-                        }
+                    public function load(string $class): MarkdownRuntime|null
+                    {
+                        return MarkdownRuntime::class === $class
+                            ? new MarkdownRuntime(new DefaultMarkdown())
+                            : null;
                     }
-                }
-            ]
+                },
+            ],
         ];
     }
 }
