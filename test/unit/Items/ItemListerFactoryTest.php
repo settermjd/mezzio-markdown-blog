@@ -28,7 +28,7 @@ final class ItemListerFactoryTest extends TestCase
         $this->config = [
             'blog' => [
                 'type'   => 'filesystem',
-                'path'   => __DIR__ . '/../_data/posts',
+                'path'   => __DIR__ . '/../../_data/posts',
                 'parser' => Parser::class,
             ],
         ];
@@ -68,7 +68,7 @@ final class ItemListerFactoryTest extends TestCase
         $config = [
             'blog' => [
                 'type'   => 'filesystem',
-                'path'   => __DIR__ . '/../data/posts',
+                'path'   => __DIR__ . '/../../data/posts',
                 'parser' => Parser::class,
             ],
         ];
@@ -156,7 +156,7 @@ final class ItemListerFactoryTest extends TestCase
                 [
                     'blag' => [
                         'type'   => 'filesystem',
-                        'path'   => __DIR__ . '/../_data/posts',
+                        'path'   => __DIR__ . '/../../_data/posts',
                         'parser' => Parser::class,
                     ],
                 ],
