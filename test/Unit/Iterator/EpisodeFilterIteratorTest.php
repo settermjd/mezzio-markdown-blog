@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Settermjd\MarkdownBlogTest\Iterator;
+namespace Settermjd\MarkdownBlogTest\Unit\Iterator;
 
 use ArrayIterator;
 use Mni\FrontYAML\Parser;

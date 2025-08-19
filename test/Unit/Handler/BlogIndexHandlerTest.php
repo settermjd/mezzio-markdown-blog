@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Settermjd\MarkdownBlogTest\Handler;
+namespace Settermjd\MarkdownBlogTest\Unit\Handler;
 
 use ArrayIterator;
 use Laminas\Diactoros\Response\HtmlResponse;

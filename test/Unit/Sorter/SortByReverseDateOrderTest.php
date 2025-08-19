@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Settermjd\MarkdownBlogTest\Sorter;
+namespace Settermjd\MarkdownBlogTest\Unit\Sorter;
 
 use DateTime;
 use PHPUnit\Framework\TestCase;

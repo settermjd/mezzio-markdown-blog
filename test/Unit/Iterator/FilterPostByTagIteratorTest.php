@@ -2,24 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Settermjd\MarkdownBlogTest\Items\Adapter;
+namespace Settermjd\MarkdownBlogTest\Unit\Iterator;
 
+use ArrayIterator;
 use DateInterval;
 use DateTime;
 use Mni\FrontYAML\Parser;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
+use Settermjd\MarkdownBlog\Entity\BlogArticle;
 use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use Settermjd\MarkdownBlog\Items\Adapter\ItemListerFilesystem;
+use Settermjd\MarkdownBlog\Items\ItemListerInterface;
+use Settermjd\MarkdownBlog\Iterator\FilterPostByTagIterator;
+use Settermjd\MarkdownBlog\Iterator\PublishedItemFilterIterator;
 
 use function sprintf;
 
-/**
- * @coversDefaultClass ItemListerFilesystem
- */
-final class ItemListerFilesystemTest extends TestCase
+final class FilterPostByTagIteratorTest extends TestCase
 {
     /** @var array<string,array<string,string>> */
     private array $structure;
@@ -28,14 +30,14 @@ final class ItemListerFilesystemTest extends TestCase
     {
         $item001Content = <<<EOF
 ---
-publish_date: "2015"
+publish_date: 13.07.2015
 slug: item-0001
-title: Getting Underway, <a href="">The E-Myth Revisited</a>, and Networking For Success
-image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0001.mp3
 synopsis: In this, the first item, Matt talks about what lead to the podcast getting started who motivated him and inspired him to get started. After that, he discusses a fantastic book that all freelancers should read.
+title: Getting Underway, The E-Myth Revisited, and Networking For Success
+image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0001.mp3
 tags:
-  - "PHP"
-  - "Docker"
+  - "Testing"
+  - "Slim Framework"
 categories:
   - "Software Development"
 ---
@@ -58,15 +60,14 @@ EOF;
 publish_date: 03.08.2015
 slug: item-0002
 title: The Mythical Man Month with Paul M. Jones & Speaking Engagements
+synopsis: In this blogArticle, I have a fireside chat with internationally recognized PHP expert Paul M. Jones about one of his all-time favorite books, The Mythical Man Month.
 image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0002.mp3
-synopsis: In this item, I have a fireside chat with internationally recognized PHP expert, and all around good fella Paul M. Jones, about one of his all-time favorite books, The Mythical Man Month.
 tags:
   - "PHP"
-  - "Paul M. Jones"
-  - "The Mythical Man Month"
-  - "Solving the N+1 Problem in PHP"
+  - "Ruby"
+  - "Laravel"
 categories:
-  - "Public Speaking"
+  - "Software Development"
 ---
 ### Synopsis
 
@@ -95,13 +96,12 @@ EOF;
 ---
 publish_date: %s
 slug: item-0003
+synopsis: In this blogArticle, I have a fireside chat with internationally recognized PHP expert Paul M. Jones about one of his all-time favorite books, The Mythical Man Month.
 title: The Mythical Man Month with Paul M. Jones & Speaking Engagements
 image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0002.mp3
-synopsis: In this item, I have a fireside chat with internationally recognized PHP expert, and all around good fella Paul M. Jones, about one of his all-time favorite books, The Mythical Man Month.
 tags:
   - "PHP"
-  - "Docker"
-  - "PHP World"
+  - "Containers"
 categories:
   - "Software Development"
 ---
@@ -126,8 +126,8 @@ EOF;
 publish_date: %s
 slug: item-0004
 title: Wisdom as a Service World Tour and Human Skills - with Yitzchok Willroth
-image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0004.mp3
 synopsis: In this item, I have a fireside chat with Yitzchok Willroth, the one and only coderabbi, about a his Wisdom as a Service World Tour.
+image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0004.mp3
 tags:
   - "PHP"
   - "Docker"
@@ -162,7 +162,8 @@ EOF;
         vfsStream::setup('root', null, $this->structure);
     }
 
-    public function testCanRetrieveASortedUniqueListOfCategories(): void
+    #[DataProvider('filterByTagDataProvider')]
+    public function testCanFilterPostsByTag(string $tag, int $postCount): void
     {
         $this->setUp();
 
@@ -172,82 +173,77 @@ EOF;
         $itemLister                    = new ItemListerFilesystem(
             vfsStream::url('root/posts'),
             new Parser(),
-            $blogArticleInputFilterFactory(),
-            null,
-            null
+            $blogArticleInputFilterFactory()
         );
-
-        $categories = $itemLister->getCategories();
-        $this->assertCount(2, $categories);
-        $this->assertSame(
-            [
-                'Public Speaking',
-                'Software Development',
-            ],
-            $categories,
+        $posts                         = new FilterPostByTagIterator(
+            new ArrayIterator($itemLister->getArticles()),
+            $tag
         );
+        $this->assertCount($postCount, $posts);
     }
 
-    public function testCanRetrieveASortedUniqueListOfTags(): void
+    /**
+     * @return (int|string)[][]
+     * @psalm-return list{list{'Kubernetes', 0}, list{'PHP', 3}, list{'Docker', 1}, list{'slim framework', 1}}
+     */
+    public static function filterByTagDataProvider(): array
     {
-        $this->setUp();
-
-        vfsStream::setup('root', null, $this->structure);
-
-        $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister                    = new ItemListerFilesystem(
-            vfsStream::url('root/posts'),
-            new Parser(),
-            $blogArticleInputFilterFactory(),
-            null,
-            null
-        );
-
-        $tags = $itemLister->getTags();
-        $this->assertCount(6, $tags);
-        $this->assertEqualsCanonicalizing(
+        return [
             [
-                "Docker",
-                "PHP",
-                "PHP World",
-                "Paul M. Jones",
-                "Solving the N+1 Problem in PHP",
-                "The Mythical Man Month",
+                'Kubernetes',
+                0,
             ],
-            $tags,
-        );
+            [
+                'PHP',
+                3,
+            ],
+            [
+                'Docker',
+                1,
+            ],
+            [
+                'slim framework',
+                1,
+            ],
+        ];
     }
 
-    public function testDataIsProperlyValidatedAndFiltered(): void
+    public function testCanHandleTagListsWithEmptyAndNullValues(): void
     {
-        $this->setUp();
+        $item = new BlogArticle([
+            "publishDate" => "2015-01-01",
+            "slug"        => "blogArticle-001",
+            "title"       => "BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001",
+            "content"     => <<<EOF
+In this blogArticle, I have a fireside chat with internationally recognized PHP expert, and all around good fella [Paul M. Jones](http://paul-m-jones.com), about one of his all-time favorite books - [The Mythical Man Month](http://www.amazon.co.uk/The-Mythical-Man-month-Software-Engineering/dp/0201835959).
 
-        vfsStream::setup('root', null, $this->structure);
+We talk about why the book is so valuable to him, how it's helped shape his career over the years, and the lessons it can teach all of us as software developers, lessons still relevant over 50 years after it was first published, in 1975.
 
-        /** @var LoggerInterface&MockObject $log */
-        $log = $this->createMock(LoggerInterface::class);
-        $log
+I've also got updates on what's been happening for me personally in my freelancing business; including speaking at php[world], attending the inaugural PHP South Coast, **and much, much more**.
+
+> **Correction:** Thanks to [@asgrim](https://twitter.com/@asgrim) for correcting me about employers rarely, if ever, paying for flights and hotels when sending staff to conferences. That was a slip up on my part. I'd only meant to say that they cover the costs of the ticket.
+EOF,
+            "synopsis"    => 'In this blogArticle, I have a fireside chat with internationally recognized PHP expert Paul M. Jones about one of his all-time favorite books, The Mythical Man Month.',
+            "image"       => "http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0002.mp3",
+            'tags'        => [null, ''],
+            'categories'  => ['Software Development'],
+        ]);
+
+        /** @var ItemListerInterface&MockObject itemLister A mocked ItemListerInterface object */
+        $itemLister = $this->createMock(ItemListerInterface::class);
+        $itemLister
             ->expects($this->once())
-            ->method('error')
-            ->with(
-                'Could not instantiate blog item for file vfs://root/posts/item-0001.md.',
-                [
-                    'publishDate' => [
-                        'regexNotMatch' => "The input does not match against pattern '/\d{4}\-\d{2}\-\d{2}|(\d{2}\.){2}\d{4}/'",
-                    ],
-                ]
-            );
+            ->method('getArticles')
+            ->willReturn([
+                $item,
+            ]);
 
-        $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister                    = new ItemListerFilesystem(
-            vfsStream::url('root/posts'),
-            new Parser(),
-            $blogArticleInputFilterFactory(),
-            null,
-            $log
+        $posts = new FilterPostByTagIterator(
+            new PublishedItemFilterIterator(
+                new ArrayIterator($itemLister->getArticles())
+            ),
+            'PHP'
         );
-
-        $articles = $itemLister->getArticles();
-        $this->assertCount(3, $articles);
+        $this->assertCount(0, $posts);
     }
 }

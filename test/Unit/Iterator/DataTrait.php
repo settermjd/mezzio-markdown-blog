@@ -2,29 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Settermjd\MarkdownBlogTest\Iterator;
+namespace Settermjd\MarkdownBlogTest\Unit\Iterator;
 
-use ArrayIterator;
 use DateInterval;
 use DateTime;
-use Mni\FrontYAML\Parser;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
-use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
-use Settermjd\MarkdownBlog\Items\Adapter\ItemListerFilesystem;
-use Settermjd\MarkdownBlog\Iterator\FilterPostByCategoryIterator;
 
 use function sprintf;
 
-final class FilterPostByCategoryIteratorTest extends TestCase
+trait DataTrait
 {
   /** @var array<string,array<string,string>> */
-    private array $structure;
+  private array $structure;
 
-    protected function setUp(): void
-    {
-        $item001Content = <<<EOF
+  public function setupArticleData(): void
+  {
+    $item001Content = <<<EOF
 ---
 publish_date: 13.07.2015
 slug: item-0001
@@ -32,8 +25,8 @@ synopsis: In this, the first item, Matt talks about what lead to the podcast get
 title: Getting Underway, The E-Myth Revisited, and Networking For Success
 image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0001.mp3
 tags:
-  - "Testing"
-  - "Slim Framework"
+  - "PHP"
+  - "Docker"
 categories:
   - "Software Development"
 ---
@@ -51,7 +44,7 @@ It's one which explains how you need to approach freelancing if you want to succ
 > **Correction:** Thanks to [@asgrim](https://twitter.com/@asgrim) for correcting me about employers rarely, if ever, paying for flights and hotels when sending staff to conferences. That was a slip up on my part. I'd only meant to say that they cover the costs of the ticket.
 EOF;
 
-        $item002Content = <<<EOF
+    $item002Content = <<<EOF
 ---
 publish_date: 03.08.2015
 slug: item-0002
@@ -60,10 +53,9 @@ synopsis: In this blogArticle, I have a fireside chat with internationally recog
 image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0002.mp3
 tags:
   - "PHP"
-  - "Ruby"
-  - "Laravel"
+  - "Docker"
 categories:
-  - "Public Speaking"
+  - "Software Development"
 ---
 ### Synopsis
 
@@ -88,7 +80,7 @@ I've also got updates on what's been happening for me personally in my freelanci
 - [Nomad PHP](https://nomadphp.com)
 EOF;
 
-        $item003Content = <<<EOF
+    $item003Content = <<<EOF
 ---
 publish_date: %s
 slug: item-0003
@@ -97,7 +89,7 @@ title: The Mythical Man Month with Paul M. Jones & Speaking Engagements
 image: http://traffic.libsyn.com/thegeekyfreelancer/FreeTheGeek-Episode0002.mp3
 tags:
   - "PHP"
-  - "Containers"
+  - "Docker"
 categories:
   - "Software Development"
 ---
@@ -114,10 +106,10 @@ I've also got updates on what's been happening for me personally in my freelanci
 - [Paul M. Jones](http://paul-m-jones.com/)
 EOF;
 
-        $futureDate     = (new DateTime())->add(new DateInterval('P3D'))->format('d.m.Y');
-        $item003Content = sprintf($item003Content, $futureDate);
+    $futureDate     = (new DateTime())->add(new DateInterval('P3D'))->format('d.m.Y');
+    $item003Content = sprintf($item003Content, $futureDate);
 
-        $item004Content = <<<EOF
+    $item004Content = <<<EOF
 ---
 publish_date: %s
 slug: item-0004
@@ -144,59 +136,17 @@ We talk about what it's like to run the tour, the time involved, the energy requ
 - [NYPHP User Group](http://nyphp.org/)
 EOF;
 
-        $futureDate     = (new DateTime())->add(new DateInterval('P5D'))->format('d.m.Y');
-        $item004Content = sprintf($item004Content, $futureDate);
+    $futureDate     = (new DateTime())->add(new DateInterval('P5D'))->format('d.m.Y');
+    $item004Content = sprintf($item004Content, $futureDate);
 
-        $this->structure = [
-            'posts' => [
-                'item-0001.md' => $item001Content,
-                'item-0002.md' => $item002Content,
-                'item-0003.md' => $item003Content,
-                'item-0004.md' => $item004Content,
-            ],
-        ];
-        vfsStream::setup('root', null, $this->structure);
-    }
-
-    #[DataProvider('filterByCategoryDataProvider')]
-    public function testCanFilterPostsByCategory(string $category, int $postCount): void
-    {
-        $this->setUp();
-
-        vfsStream::setup('root', null, $this->structure);
-
-        $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister                    = new ItemListerFilesystem(
-            vfsStream::url('root/posts'),
-            new Parser(),
-            $blogArticleInputFilterFactory()
-        );
-        $posts                         = new FilterPostByCategoryIterator(
-            new ArrayIterator($itemLister->getArticles()),
-            $category
-        );
-        $this->assertCount($postCount, $posts);
-    }
-
-  /**
-   * @return (int|string)[][]
-   * @psalm-return list{list{'Podcasts', 0}, list{'Software Development', 3}, list{'Public Speaking', 1}}
-   */
-    public static function filterByCategoryDataProvider(): array
-    {
-        return [
-            [
-                'Podcasts',
-                0,
-            ],
-            [
-                'Software Development',
-                3,
-            ],
-            [
-                'Public Speaking',
-                1,
-            ],
-        ];
-    }
+    $this->structure = [
+      'posts' => [
+        'item-0001.md' => $item001Content,
+        'item-0002.md' => $item002Content,
+        'item-0003.md' => $item003Content,
+        'item-0004.md' => $item004Content,
+      ],
+    ];
+    vfsStream::setup('root', null, $this->structure);
+  }
 }

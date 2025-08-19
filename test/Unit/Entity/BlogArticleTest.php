@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Settermjd\MarkdownBlogTest\Entity;
+namespace Settermjd\MarkdownBlogTest\Unit\Entity;
 
 use DateTime;
 use PHPUnit\Framework\Attributes\DataProvider;

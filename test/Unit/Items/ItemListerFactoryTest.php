@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Settermjd\MarkdownBlogTest\Items;
+namespace Settermjd\MarkdownBlogTest\Unit\Items;
 
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
