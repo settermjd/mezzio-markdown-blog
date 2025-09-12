@@ -14,6 +14,8 @@ use Laminas\Validator\Regex;
 
 final class BlogArticleInputFilterFactory
 {
+    public const string FILTER_REGEX = '/\d{4}\-\d{2}\-\d{2}|(\d{2}\.){2}\d{4}/';
+
     /**
      * @psalm-return InputFilter<mixed>
      */
@@ -24,7 +26,7 @@ final class BlogArticleInputFilterFactory
             ->getValidatorChain()
             ->attach(new Regex(
                 [
-                    'pattern' => '/\d{4}\-\d{2}\-\d{2}|(\d{2}\.){2}\d{4}/',
+                    'pattern' => self::FILTER_REGEX,
                 ]
             ));
         $publishDate
