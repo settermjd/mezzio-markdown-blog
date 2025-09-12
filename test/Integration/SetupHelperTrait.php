@@ -14,7 +14,7 @@ trait SetupHelperTrait
     public function setupContainer(ViewLayer $viewLayer = ViewLayer::Twig)
     {
         $viewRenderer = match ($viewLayer) {
-            ViewLayer::LaminasView => \Mezzio\LaminasView\ConfigProvider::class,
+            ViewLayer::LaminasView => ConfigProvider::class,
             ViewLayer::Plates => \Mezzio\Plates\ConfigProvider::class,
             ViewLayer::Twig => \Mezzio\Twig\ConfigProvider::class,
         };
@@ -26,8 +26,12 @@ trait SetupHelperTrait
             \Mezzio\Router\FastRouteRouter\ConfigProvider::class,
             $viewRenderer,
             \Settermjd\MarkdownBlog\ConfigProvider::class,
-            new class()
+            new class ($viewLayer)
             {
+                public function __construct(private readonly ViewLayer $viewLayer)
+                {
+                }
+
                 public function __invoke(): array
                 {
                     return [
@@ -35,7 +39,7 @@ trait SetupHelperTrait
                             'paths' => [
                                 'app'    => [__DIR__ . '/../_data/templates/app'],
                                 'error'  => [__DIR__ . '/../_data/templates/error'],
-                                'layout' => [__DIR__ . '/../_data/templates/layout'],
+                                'layout' => [__DIR__ . "/../_data/templates/layout/{$this->viewLayer->value}"],
                             ],
                         ],
                     ];
