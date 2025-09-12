@@ -1,0 +1,32 @@
+<?php if (isset($pageCount) && $pageCount > 1): ?>
+    <nav>
+        <ul>
+            <!-- Previous page link -->
+            <?php if (isset($previous) && ! empty($previous)): ?>
+                <li>
+                    <a>&Larr;</a>
+                </li>
+            <?php endif ?>
+
+            <!-- Numbered page links -->
+            <?php foreach (range(1, $pageCount) as $page): ?>
+                <?php if ($page === $current): ?>
+                    <li>
+                        <a>{<?= $this->e($page) ?></a>
+                    </li>
+                <?php else: ?>
+                    <li>
+                        <span><?= $this->e($page) ?></span>
+                    </li>
+                <?php endif ?>
+            <?php endforeach ?>
+
+            <!-- Next page link -->
+            <?php if (isset($next) && ! empty($next)): ?>
+                <li>
+                    <a>&Rarr;</a>
+                </li>
+            <?php endif ?>
+        </ul>
+    </nav>
+<?php endif ?>

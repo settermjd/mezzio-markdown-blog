@@ -9,15 +9,15 @@
     </div>
 </div>
 
-<div>
+<div id="blog-item-container">
     {% if articles is empty %}
-        <div>
+        <div id="no-blog-items">
             No blog items are currently available.
         </div>
     {% else %}
-        <div>
+        <div id="blog-items">
             {% for article in articles %}
-                <div>
+                <div id="blog-item-{{ loop.index }}">
                     <div>
                         <a href="/tutorial/{{ article.slug }}">
                             <img src="/images/blog/{{ article.image }}"

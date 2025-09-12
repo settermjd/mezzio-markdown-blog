@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>{% block title %}{% endblock %} - mezzio</title>
+    <link rel="shortcut icon" href="https://getlaminas.org/images/favicon/favicon.ico" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,100;0,300;0,400;0,500;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,700;1,800;1,900&family=Antic+Slab&family=Domine:wght@400..700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&display=swap" rel="stylesheet">
+    {% block stylesheets %}{% endblock %}
+</head>
+<body class="bg-sky-900 text-white">
+    <header class="mx-auto">
+        <nav class="flex flex-row place-content-between gap-x-2 mx-auto my-3 py-1 mb-4">
+            <a href="/" class="mt-1">Always Accessible Web Design</a>
+            <ol class="flex flex-row justify-items-end gap-x-4">
+                <li class="py-1"><a href="/about">About</a></li>
+                <li class="py-1"><a href="/services">Services</a></li>
+                <li class="py-1"><a href="/blog">Blog</a></li>
+                <li class="py-1"><a href="/contact">Contact</a></li>
+                <li class="nav-cta px-2 py-1 bg-white rounded-md text-slate-700 hover:cursor-pointer">
+                    <a href="https://calendly.com/matthewsetter/podcast-session" title="Book a consulting call">Book a Call</a>
+                </li>
+            </ol>
+        </nav>
+    </header>
+
+    <div class="mx-auto mx-auto p-6 lg:p-0 gap-y-8 shadow-lg">
+        <header>
+
+        </header>
+    </div>
+
+    <div class="mx-auto bg-neutral-100 text-slate-900/75 pt-2 pb-8">
+        <main class="mb-5"> 
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <div class="flex items-center justify-center flex-col mx-auto md:w-4xl lg:w-5xl p-6 lg:p-0 gap-y-8"></div>
+        <footer class="w-full pt-2 my-1">
+            <div class="flex flex-row place-content-between gap-x-8 mb-4 mt-2">
+                <div>
+                    <ul class="flex flex-row gap-x-3 mt-1">
+                        <li><a href="https://linkedin.com" title="Follow us on LinkedIn" target="_blank"><img src="/images/socials/small/linkedin-black-background.png" width="40" height="40"></a></li>
+                        <li><a href="https://youtube.com" title="Follow us on YouTube" target="_blank"><img src="/images/socials/small/youtube-black-background.png" width="40" height="40"></a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="grid grid-cols-2 gap-x-4">
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/about">About</a></li>
+                            <li><a href="/services">Services</a></li>
+                            <li><a href="/blog">Blog</a></li>
+                            <li><a href="/contact">Contact</a></li>
+                        </ul>
+                        <ul>
+                            <li><a href="/privacy">Privacy Policy</a></li>
+                            <li><a href="/cookies">Cookie Policy</a></li>
+                            <li><a href="/disclaimer">Disclaimer</a></li>
+                            <li><a href="/terms">Terms and Conditions</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-base">copyright {{ "now"|date("Y") }}, <a href="https://matthewsetter.com" target="_blank" class="underline decoration-2 decoration-white">Matthew Setter</a>. All rights reserved.</p>
+        </footer>
+    </div>
+
+    {% block javascript %}{% endblock %}
+</body>
+</html>

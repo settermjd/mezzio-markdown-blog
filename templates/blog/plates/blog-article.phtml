@@ -1,0 +1,28 @@
+<?php $this->layout('layout::default', ['title' => $article->getTitle() . " | Blog"]) ?>
+
+<div id="article">
+    <div>
+        <a href="/blog">
+            &larr; View all blog articles
+        </a>
+        <h1>
+            <?= $this->e($article->getTitle()) ?>
+        </h1>
+        <div>
+            <div id="publish-date">
+                Published on <?= $this->e($article->getPublishDate()->format("D, F jS, Y")) ?>
+            </div>
+            <div class="categories">
+                <?= $this->e(implode(", ", $article->getCategories())) ?>
+            </div>
+        </div>
+        <picture>
+            <source type="image/webp"
+                srcset="/images/blogArticles/<?= $this->e($article->getImage()) ?>">
+        </picture>
+        <p id="synopsis"><?= $this->e($article->getSynopsis()) ?></p>
+        <div id="content">
+            <?= $this->markdown_to_html($article->getContent()) ?>
+        </div>
+    </div>
+</div>

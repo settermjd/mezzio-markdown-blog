@@ -1,0 +1,26 @@
+<div id="article">
+    <div>
+        <a href="/blog">
+            &larr; View all blog articles
+        </a>
+        <h1>
+            <?= $this->escapeHtml($this->article->getTitle()) ?>
+        </h1>
+        <div>
+            <div id="publish-date">
+                Published on <?= $this->escapeHtml($this->article->getPublishDate()->format("D, F jS, Y")) ?>
+            </div>
+            <div id="categories">
+                <span><?= $this->escapeHtml(implode(", ", $this->article->getCategories())) ?></span>
+            </div>
+        </div>
+        <picture>
+            <source type="image/webp"
+                srcset="/images/blogArticles/<?= $this->escapeHtml($this->article->getImage()) ?>">
+        </picture>
+        <p id="synopsis"><?= $this->escapeHtml($this->article->getSynopsis()) ?></p>
+        <div id="content">
+            <?= $this->markdown_to_html($this->article->getContent()) ?>
+        </div>
+    </div>
+</div>

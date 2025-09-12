@@ -1,0 +1,38 @@
+<?php $this->layout('layout::default', ['title' => 'Blog']) ?>
+
+<div>
+    <div>
+        <h1>Blog</h1>
+    </div>
+</div>
+
+<div>
+    <?php if (count($articles) === 0): ?>
+        <div id="no-blog-items">
+            No blog items are currently available.
+        </div>
+    <?php else: ?>
+        <div id="blog-items">
+            <?php foreach ($articles as $index => $article): ?>
+                <div id="blog-item-<?= $this->e($index) ?>">
+                    <div>
+                        <a href="/tutorial/<?= $this->e($article->getSlug()) ?>">
+                            <img src="/images/blog/<?= $this->e($article->getImage()) ?>"
+                                alt="<?= $this->e($article->getTitle()) ?>">
+                        </a>
+                    </div>
+                    <p><?= $this->e($article->getPublishDate()->format("D, F jS, Y")) ?></p>
+                    <h3>
+                        <a href="/blog/item/<?= $this->e($article->getSlug()) ?>">
+                            <?= $this->e($article->getTitle()) ?>
+                        </a>
+                    </h3>
+                    <p><?= $this->e($article->getSynopsis()) ?></p>
+                    <p><a href="/blog/item/<?= $this->e($article->getSlug()) ?>">&#10132; Read the tutorial</a>
+                    </p>
+                </div>
+            <?php endforeach ?>
+        </div>
+        <?= $this->insert('blog::includes/pagination') ?>
+    <?php endif ?>
+</div>
