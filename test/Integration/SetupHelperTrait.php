@@ -6,6 +6,9 @@ namespace Settermjd\MarkdownBlogTest\Integration;
 
 use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\HelperPluginManager;
+use Mezzio\LaminasView\ConfigProvider;
+use Settermjd\MarkdownBlog\ViewLayer\LaminasView\Helpers\MarkdownToHtml;
 
 trait SetupHelperTrait
 {
@@ -47,12 +50,15 @@ trait SetupHelperTrait
             },
         ];
         $configAggregator = new ConfigAggregator($configuration);
-        $config = $configAggregator->getMergedConfig();
+        $config           = $configAggregator->getMergedConfig();
 
-        $dependencies                                 = $config['dependencies'];
-        $dependencies['services']['config']           = $config;
-        $dependencies['services']['config']['blog']['path']  = __DIR__ . '/../_data/posts';
+        $dependencies                                       = $config['dependencies'];
+        $dependencies['services']['config']                 = $config;
+        $dependencies['services']['config']['blog']['path'] = __DIR__ . '/../_data/posts';
 
         $this->container = new ServiceManager($dependencies);
+
+        $helpers = $this->container->get(HelperPluginManager::class);
+        $helpers->setService('markdown_to_html', new MarkdownToHtml());
     }
 }
