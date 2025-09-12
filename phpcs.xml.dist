@@ -22,24 +22,24 @@
         <exclude-pattern>src/ConfigProvider.*.php</exclude-pattern>
     </rule>
 
+    <!-- See https://github.com/slevomat/coding-standard/issues/523 -->
     <rule ref="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration.InvalidFormat">
-        <exclude-pattern>test/Iterator/FilterPostByTagIteratorTest.php</exclude-pattern>
+        <exclude-pattern>test/Unit/Iterator/FilterPostByTagIteratorTest.php</exclude-pattern>
     </rule>
-    
+
     <rule ref="Generic.Files.LineLength">
         <exclude-pattern>src/ConfigProvider.php</exclude-pattern>
         <exclude-pattern>src/Items/Adapter/ItemListerFilesystem.php</exclude-pattern>
-        <exclude-pattern>test/Entity/BlogArticleTest.php</exclude-pattern>
-        <exclude-pattern>test/InputFilter/BlogArticleInputFilterFactoryTest.php</exclude-pattern>
-        <exclude-pattern>test/Items/Adapter/ItemListerFilesystemTest.php</exclude-pattern>
-        <exclude-pattern>test/Items/ItemListerFactoryTest.php</exclude-pattern>
-        <exclude-pattern>test/Iterator/DataTrait.php</exclude-pattern>
-        <exclude-pattern>test/Iterator/EpisodeFilterIteratorTest.php</exclude-pattern>
-        <exclude-pattern>test/Iterator/FilterPostByCategoryIteratorTest.php</exclude-pattern>
-        <exclude-pattern>test/Iterator/FilterPostByTagIteratorTest.php</exclude-pattern>
-        <exclude-pattern>test/Iterator/FilterPostByTagIteratorTest.php</exclude-pattern>
-        <exclude-pattern>test/Iterator/FilterPostByTagIteratorTest.php</exclude-pattern>
-        <exclude-pattern>test/Iterator/PublishedItemFilterIteratorTest.php</exclude-pattern>
-        <exclude-pattern>test/Iterator/RelatedPostsFilterIteratorTest.php</exclude-pattern>
+        <exclude-pattern>test/Unit/Entity/BlogArticleTest.php</exclude-pattern>
+        <exclude-pattern>test/Unit/InputFilter/BlogArticleInputFilterFactoryTest.php</exclude-pattern>
+        <exclude-pattern>test/Unit/Items/Adapter/ItemListerFilesystemTest.php</exclude-pattern>
+        <exclude-pattern>test/Unit/Items/ItemListerFactoryTest.php</exclude-pattern>
+        <exclude-pattern>test/Unit/Iterator/DataTrait.php</exclude-pattern>
+        <exclude-pattern>test/Unit/Iterator/EpisodeFilterIteratorTest.php</exclude-pattern>
+        <exclude-pattern>test/Unit/Iterator/FilterPostByCategoryIteratorTest.php</exclude-pattern>
+        <exclude-pattern>test/Unit/Iterator/FilterPostByTagIteratorTest.php</exclude-pattern>
+        <exclude-pattern>test/Unit/Iterator/PublishedItemFilterIteratorTest.php</exclude-pattern>
+        <exclude-pattern>test/Unit/Iterator/RelatedPostsFilterIteratorTest.php</exclude-pattern>
+        <exclude-pattern>test/Unit/InputFilter/BlogArticleInputFilterFactoryTest.php</exclude-pattern>
     </rule>
 </ruleset>

@@ -1,0 +1,39 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block title %}{{ article.title }} | Blog{% endblock %}
+
+{% block content %}
+<div id="article">
+    <div>
+        <a href="/blog">
+            &larr; View all blog articles
+        </a>
+        <h1>
+            {{ article.title }}
+        </h1>
+        <div>
+            <div id="publish-date">
+                Published on {{ article.getPublishDate|date("m/d/Y", "Australia/Brisbane") }}
+            </div>
+            <div id="categories">
+                {{ article.categories|join }}
+            </div>
+        </div>
+        <picture>
+            <source type="image/webp"
+                    srcset="/images/articles/{{ article.image }}">
+            {% if article['fallback'] is defined and not article.fallback is empty %}
+                <img src="/images/articles/{{ article.fallback }}"
+                     alt="{{ article.title }}"
+                     loading="lazy">
+            {% endif %}
+        </picture>
+        {% if article.synopsis is defined and not article.synopsis is empty %}
+            <p id="synopsis">{{ article.synopsis }}</p>
+        {% endif %}
+        <div id="content">
+            {{ article.content|markdown_to_html }}
+        </div>
+    </div>
+</div>
+{% endblock %}

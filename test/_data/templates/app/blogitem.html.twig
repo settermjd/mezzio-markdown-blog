@@ -1,0 +1,81 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block title %}{{ tutorial.title }} | Blog{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center flex-col mx-auto p-6 lg:p-0 gap-y-8">
+    <header>
+        <a href="/blog" 
+            class="lowercase mb-6 block no-underline hover:underline text-sky-600">
+            &larr; Back to all tutorials
+        </a>
+        <h1>{{ tutorial.title }}</h1>
+    </header>
+</div>
+
+<div class="flex items-center justify-center flex-col w-full pb-8 bg-neutral-100 text-slate-900/75">
+    <main class="mx-auto px-6 lg:p-0 gap-y-8 mb-5">
+        <div class="flex flex-row">
+            <div class="text-base flex-grow">
+                <span class="mr-4">
+                    Published on {{tutorial.getPublishDate|date("m/d/Y", "Australia/Brisbane")}}
+                </span>
+            </div>
+            <div class="shrink text-sm">
+                <span class="border-1 border-slate-400 bg-slate-100 text-slate-600 lowercase rounded-full p-2 px-4">{{
+                    tutorial.categories|join }}</span>
+            </div>
+        </div>
+        <picture>
+            <source type="image/webp" srcset="/images/tutorials/{{ tutorial.image }}">
+            {% if tutorial['fallback'] is defined and not tutorial.fallback is empty %}
+            <img src="/images/tutorials/{{ tutorial.fallback }}" class="rounded-md drop-shadow-xl mt-8 mb-4 mx-auto"
+                alt="{{ tutorial.title }}" loading="lazy">
+            {% endif %}
+        </picture>
+        {% if tutorial.synopsis is defined and not tutorial.synopsis is empty %}
+        <p class="text-gray-700 leading-8 font-medium">{{ tutorial.synopsis }}</p>
+        {% endif %}
+        {{ tutorial.content|markdown_to_html }}
+        <div id="about-me" 
+            class="mt-2 text-slate-700 leading-relaxed p-6 rounded-md border border-slate-300 bg-slate-50 drop-shadow-md">
+            <h3 class="mb-2">About Matthew</h3>
+            <div class="flex flex-row space-x-4">
+                <img src="/images/photos/photo-44x44.png" align="left" width="44" height="44"
+                    class="bg-slate-100 border-2 border-slate-400 rounded-full"
+                    alt="Matthew Setter">
+                <p class="mt-0">
+                    I'm a long-time web developer and technical writer, the author of <a
+                        href="https://mezzioessentials.com" target="_blank" title="Check out Mezzio Essentials">Mezzio
+                        Essentials</a> and <a href="https://deploywithdockercompose.com" target="_blank"
+                        class="Check out Deploy With Docker Compose">Deploy With Docker Compose</a>, and the host of the
+                    <a href="https://freethegeek.fm" target="_blank" title="Listen to the Web Dev With Matt podcast">Web
+                        Dev with Matt</a> podcast.
+                    You can find me on <a href="https://twitter.com/webdevwithmatt" target="_blank">Twitter</a> and
+                    <a href="https://www.linkedin.com/company/webdevwithmatt/" title="Follow Matt on LinkedIn"
+                        target="_blank">LinkedIn</a>.
+                </p>
+            </div>
+        </div>
+        {#
+        <div class="mt-12">
+            <h2
+                class="text-left text-xl lg:text-2xl xl:text-3xl text-wdwm-orange font-bold leading-tight lg:leading-snug">
+                You might also enjoy reading these tutorials:</h2>
+        </div>
+        <div class="mt-12">
+            <h2
+                class="text-left text-xl lg:text-2xl xl:text-3xl text-wdwm-orange font-bold leading-tight lg:leading-snug">
+                Comments</h2>
+        </div>
+        #}
+    </main>
+</div>
+
+{% endblock %}

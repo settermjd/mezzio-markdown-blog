@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Settermjd\MarkdownBlogTest;
+namespace Settermjd\MarkdownBlogTest\Unit;
 
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;

@@ -1,0 +1,40 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <h1>Blog</h1>
+    </div>
+</div>
+
+<div id="blog-item-container">
+    {% if articles is empty %}
+        <div id="no-blog-items">
+            No blog items are currently available.
+        </div>
+    {% else %}
+        <div id="blog-items">
+            {% for article in articles %}
+                <div id="blog-item-{{ loop.index }}">
+                    <div>
+                        <a href="/tutorial/{{ article.slug }}">
+                            <img src="/images/blog/{{ article.image }}"
+                                 alt="{{ article.title }}">
+                        </a>
+                    </div>
+                    <p>{{ article.publishDate|format_datetime() }}</p>
+                    <h3>
+                        <a href="/blog/item/{{ article.slug }}">{{ article.title }}</a>
+                    </h3>
+                    <p>{{ article.synopsis }}</p>
+                    <p><a href="/blog/item/{{ article.slug }}">&#10132; Read the tutorial</a>
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+        {{ include('@blog/includes/pagination.html.twig') }}
+    {% endif %}
+</div>
+{% endblock %}

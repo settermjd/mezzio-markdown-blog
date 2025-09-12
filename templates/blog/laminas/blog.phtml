@@ -1,0 +1,38 @@
+<?php $this->headTitle('Blog'); ?>
+
+<div>
+    <div>
+        <h1>Blog</h1>
+    </div>
+</div>
+
+<div>
+    <?php if (count($this->articles) === 0): ?>
+        <div id="no-blog-items">
+            No blog items are currently available.
+        </div>
+    <?php else: ?>
+        <div id="blog-items">
+            <?php foreach ($this->articles as $index => $article): ?>
+                <div id="blog-item-<?= $this->escapeHtml($index) ?>">
+                    <div>
+                        <a href="/tutorial/<?= $this->escapeHtml($article->getSlug()) ?>">
+                            <img src="/images/blog/<?= $this->escapeHtml($article->getImage()) ?>"
+                                alt="<?= $this->escapeHtml($article->getTitle()) ?>">
+                        </a>
+                    </div>
+                    <p><?= $this->escapeHtml($article->getPublishDate()->format("D, F jS, Y")) ?></p>
+                    <h3>
+                        <a href="/blog/item/<?= $this->escapeHtml($article->getSlug()) ?>">
+                            <?= $this->escapeHtml($article->getTitle()) ?>
+                        </a>
+                    </h3>
+                    <p><?= $this->escapeHtml($article->getSynopsis()) ?></p>
+                    <p>
+                        <a href="/blog/item/<?= $this->escapeHtml($article->getSlug()) ?>">&#10132; Read the tutorial</a>
+                    </p>
+                </div>
+            <?php endforeach ?>
+        </div>
+    <?php endif ?>
+</div>

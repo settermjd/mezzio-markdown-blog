@@ -11,6 +11,11 @@ use Settermjd\MarkdownBlog\Entity\BlogArticle;
 use function array_intersect;
 
 /**
+ * This class returns a list of posts/articles related to the one provided
+ *
+ * An article is considered related if it has any of the same tags or categories
+ * but doesn't have the same slug.
+ *
  * @template TKey of int
  * @template TValue of BlogArticle
  * @template TIterator of Iterator
@@ -18,13 +23,9 @@ use function array_intersect;
  */
 final class RelatedPostsFilterIterator extends FilterIterator
 {
-    private BlogArticle $blogArticle;
-
-    public function __construct(Iterator $iterator, BlogArticle $blogArticle)
+    public function __construct(Iterator $iterator, private BlogArticle $blogArticle)
     {
         parent::__construct($iterator);
-
-        $this->blogArticle = $blogArticle;
     }
 
     /**

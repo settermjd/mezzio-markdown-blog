@@ -14,6 +14,8 @@ use Settermjd\MarkdownBlog\Handler\BlogIndexHandler;
 use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use Settermjd\MarkdownBlog\Items\ItemListerFactory;
 use Settermjd\MarkdownBlog\Items\ItemListerInterface;
+use Settermjd\MarkdownBlog\ViewLayer\Plates\Extensions\MarkdownToHtml;
+use Settermjd\MarkdownBlogTest\Integration\ViewLayer;
 use Twig\Extra\Intl\IntlExtension;
 use Twig\Extra\Markdown\DefaultMarkdown;
 use Twig\Extra\Markdown\MarkdownExtension;
@@ -43,6 +45,11 @@ final class ConfigProvider
             'routes'       => $this->getRoutes(),
             'templates'    => $this->getTemplates(),
             'twig'         => $this->getTwigConfig(),
+            'plates'       => $this->getPlatesConfig(),
+            //$this->getLaminasViewConfig(),
+            'view_helpers' => [
+                "markdown_to_html" => new MarkdownToHtml(),
+            ],
         ];
     }
 
@@ -102,10 +109,12 @@ final class ConfigProvider
      */
     public function getTemplates(): array
     {
+        $templateLayer = $_ENV['TEMPLATE_LAYER'] ?? ViewLayer::Twig->value;
+
         return [
             'paths' => [
                 'blog' => [
-                    __DIR__ . '/../templates/blog',
+                    __DIR__ . "/../templates/blog/$templateLayer",
                 ],
             ],
         ];
@@ -171,6 +180,32 @@ final class ConfigProvider
                             : null;
                     }
                 },
+            ],
+        ];
+    }
+
+    /**
+     * getPlatesConfig returns a default configuration for Plates
+     *
+     * This avoids users having to copy a config file to their local config/autoload directory.
+     * However, a default file is provided in the package's config/autoload directory.
+     *
+     * @return array{"extensions": array}
+     */
+    public function getPlatesConfig(): array
+    {
+        return [
+            'extensions' => [
+                new MarkdownToHtml(),
+            ],
+        ];
+    }
+
+    public function getLaminasViewConfig(): array
+    {
+        return [
+            'view_helpers' => [
+                new MarkdownToHtml(),
             ],
         ];
     }
