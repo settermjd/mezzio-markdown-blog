@@ -17,10 +17,10 @@ final class MarkdownToHtml implements ExtensionInterface
 {
     public function register(Engine $engine)
     {
-        $engine->registerFunction('markdown_to_html', [$this, 'markdownToHtml']);
+        $engine->registerFunction('markdown_to_html', [$this, 'convertToHtml']);
     }
 
-    public function markdownToHtml(string $markdown): string
+    public function convertToHtml(string $markdown): string
     {
         $converter = new CommonMarkConverter();
         return $converter

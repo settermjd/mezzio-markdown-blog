@@ -7,6 +7,8 @@ namespace Settermjd\MarkdownBlogTest\Unit\ViewLayer\Plates\Extensions;
 use PHPUnit\Framework\TestCase;
 use Settermjd\MarkdownBlog\ViewLayer\Plates\Extensions\MarkdownToHtml;
 
+use function trim;
+
 class MarkdownToHtmlTest extends TestCase
 {
     /**
@@ -19,7 +21,7 @@ class MarkdownToHtmlTest extends TestCase
         $extension = new MarkdownToHtml();
         self::assertSame(
             '<h1>Hello, World!</h1>',
-            trim($extension->markdownToHtml('# Hello, World!')),
+            trim($extension->convertToHtml('# Hello, World!')),
         );
     }
 }
