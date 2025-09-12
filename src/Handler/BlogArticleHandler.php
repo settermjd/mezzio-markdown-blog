@@ -22,7 +22,7 @@ final readonly class BlogArticleHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $data = [
-            'blogArticle' => $this->itemLister->getArticle($request->getAttribute('slug')),
+            'article' => $this->itemLister->getArticle($request->getAttribute('slug')),
         ];
 
         return new HtmlResponse($this->renderer->render('blog::blog-article', $data));

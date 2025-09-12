@@ -22,7 +22,7 @@ trait SetupHelperTrait
             ViewLayer::Twig => \Mezzio\Twig\ConfigProvider::class,
         };
 
-        $configuration = [
+        $configuration    = [
             \Mezzio\ConfigProvider::class,
             \Mezzio\Helper\ConfigProvider::class,
             \Mezzio\Router\ConfigProvider::class,

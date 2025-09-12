@@ -22,7 +22,7 @@ class BlogArticleHandlerTest extends TestCase
             ->expects($this->once())
             ->method('render')
             ->with('blog::blog-article', [
-                'blogArticle' => new BlogArticle(),
+                'article' => new BlogArticle(),
             ]);
 
         $itemLister = $this->createMock(ItemListerInterface::class);
