@@ -1,9 +1,22 @@
 <!-- markdownlint-disable MD013 -->
 # Mezzio Markdown Blog
 
-This is a blog module for Mezzio applications.
-It provides the basics of converting a series of, minimalist, Markdown files with Yaml front-matter into an array of `BlogArticle` entities.
-These entities can be used to provide a list of blog articles, or to render a given article.
+This is a basic blog module for Mezzio applications, allowing you to get up and running with a blog in your applications pretty quickly.
+
+## How it works
+
+When installed, the module adds two routes to the application's routing table:
+
+- **One to list all of the available blog items.**
+  Using the path `/blog[/{current:\d+}]`, by default it lists the first page of the blog index.
+  However, if a page number is supplied `current`, then that page of the blog will be displayed.
+  Alternatively, the user can move forward and backward through pages of the blog by using the pagination links at the bottom of the current page.
+  It converts a series of Markdown files with Yaml front-matter into an array of `BlogArticle` entities, which are then rendered as HTML.
+
+- **One to view individual blog items.**
+  Using the path `/blog/item/{slug}`, this route displays a blog item with the slug provided.
+  In addition to being able to view the matching blog item, a listing of one or more blog items that are related to the current item are also available, if any matches are available.
+
 
 Here is a sample article, so that you know, roughly, what to expect.
 
