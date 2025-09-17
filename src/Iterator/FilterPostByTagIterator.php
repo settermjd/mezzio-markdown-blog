@@ -39,6 +39,7 @@ final class FilterPostByTagIterator extends FilterIterator
 
         // Filter out empty/null entries, which will break array_map's use of strtolower
         $tags = array_filter($post->getTags());
+
         if (! empty($tags)) {
             return in_array($this->tag, array_map('strtolower', $tags));
         }

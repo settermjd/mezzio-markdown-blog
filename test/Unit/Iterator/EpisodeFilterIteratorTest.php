@@ -20,16 +20,9 @@ final class EpisodeFilterIteratorTest extends TestCase
 {
     use DataTrait;
 
-    protected function setUp(): void
-    {
-        $this->setupArticleData();
-    }
-
     public function testCanFilterUpcomingItems(): void
     {
-        $this->setUp();
-
-        vfsStream::setup('root', null, $this->structure);
+        $this->setupArticleData();
 
         $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
         $itemLister                    = new ItemListerFilesystem(
@@ -54,9 +47,7 @@ final class EpisodeFilterIteratorTest extends TestCase
 
     public function testCanGetAllPastItems(): void
     {
-        $this->setUp();
-
-        vfsStream::setup('root', null, $this->structure);
+        $this->setupArticleData();
 
         $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
         $itemLister                    = new ItemListerFilesystem(

@@ -7,7 +7,7 @@
 </div>
 
 <div>
-    <?php if (count($this->articles) === 0): ?>
+    <?php if (iterator_count($this->articles) === 0): ?>
         <div id="no-blog-items">
             No blog items are currently available.
         </div>

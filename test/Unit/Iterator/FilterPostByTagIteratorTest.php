@@ -6,6 +6,9 @@ namespace Settermjd\MarkdownBlogTest\Unit\Iterator;
 
 use ArrayIterator;
 use Mni\FrontYAML\Parser;
+use Monolog\Handler\StreamHandler;
+use Monolog\Level;
+use Monolog\Logger;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -30,9 +33,11 @@ final class FilterPostByTagIteratorTest extends TestCase
         $itemLister                    = new ItemListerFilesystem(
             vfsStream::url('root/posts'),
             new Parser(),
-            $blogArticleInputFilterFactory()
+            $blogArticleInputFilterFactory(),
+            logger: (new Logger('debug'))->pushHandler(new StreamHandler('/tmp/test.debug.log', Level::Debug)),
         );
-        $posts                         = new FilterPostByTagIterator(
+
+        $posts = new FilterPostByTagIterator(
             new ArrayIterator($itemLister->getArticles()),
             $tag
         );
@@ -41,7 +46,7 @@ final class FilterPostByTagIteratorTest extends TestCase
 
     /**
      * @return (int|string)[][]
-     * @psalm-return list{list{'Kubernetes', 0}, list{'PHP', 3}, list{'Docker', 1}, list{'slim framework', 1}}
+     * @psalm-return list{list{'Kubernetes', 0}, list{'PHP', 3}, list{'Docker', 1}, list{'Slim Framework', 2}}
      */
     public static function filterByTagDataProvider(): array
     {
@@ -59,8 +64,8 @@ final class FilterPostByTagIteratorTest extends TestCase
                 1,
             ],
             [
-                'slim framework',
-                1,
+                'Slim Framework',
+                2,
             ],
         ];
     }
