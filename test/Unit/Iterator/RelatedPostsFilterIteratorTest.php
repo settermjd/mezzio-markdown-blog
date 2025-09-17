@@ -84,7 +84,7 @@ EOF,
                     'tags'        => ['PHP', 'Docker'],
                     'categories'  => ['Software Development'],
                 ],
-                3,
+                4,
                 [
                     'item-0004',
                 ],

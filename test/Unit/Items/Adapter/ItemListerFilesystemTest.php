@@ -6,14 +6,13 @@ namespace Settermjd\MarkdownBlogTest\Unit\Items\Adapter;
 
 use Mni\FrontYAML\Parser;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use Settermjd\MarkdownBlog\Items\Adapter\ItemListerFilesystem;
 use Settermjd\MarkdownBlogTest\Unit\Iterator\DataTrait;
 
-use function sprintf;
+use function array_values;
 
 /**
  * @coversDefaultClass ItemListerFilesystem
@@ -36,12 +35,13 @@ final class ItemListerFilesystemTest extends TestCase
         );
 
         $categories = $itemLister->getCategories();
-        $this->assertCount(1, $categories);
+        $this->assertCount(2, $categories);
         $this->assertSame(
             [
                 'Software Development',
+                'Technical Writing',
             ],
-            $categories,
+            array_values($categories),
         );
     }
 
@@ -61,10 +61,11 @@ final class ItemListerFilesystemTest extends TestCase
         );
 
         $tags = $itemLister->getTags();
-        $this->assertCount(7, $tags);
+        $this->assertCount(8, $tags);
         $this->assertEqualsCanonicalizing(
             [
                 "Containers",
+                "Developer Education",
                 "Docker",
                 "Laravel",
                 "PHP",
@@ -76,28 +77,11 @@ final class ItemListerFilesystemTest extends TestCase
         );
     }
 
-    public function testDataIsProperlyValidatedAndFiltered(): void
+    #[TestWith(['item-0005', 0])]
+    #[TestWith(['item-0001', 3])]
+    public function testCanRetrieveRelatedArticles(string $slug, int $expectedArticles): void
     {
-        $this->markTestSkipped("Need to figure out why error is not called");
-
         $this->setupArticleData();
-
-        /** @var LoggerInterface&MockObject $log */
-        $log = $this->createMock(LoggerInterface::class);
-        $log
-            ->expects($this->once())
-            ->method('error')
-            ->with(
-                'Could not instantiate blog item for file vfs://root/posts/item-0001.md.',
-                [
-                    'publishDate' => [
-                        'regexNotMatch' => sprintf(
-                            "The input does not match against pattern '%s'",
-                            BlogArticleInputFilterFactory::FILTER_REGEX,
-                        ),
-                    ],
-                ]
-            );
 
         $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
         $itemLister                    = new ItemListerFilesystem(
@@ -105,10 +89,26 @@ final class ItemListerFilesystemTest extends TestCase
             new Parser(),
             $blogArticleInputFilterFactory(),
             null,
-            $log
+            null
+        );
+
+        $articles = $itemLister->getRelatedArticles($itemLister->getArticle($slug));
+        $this->assertCount($expectedArticles, $articles);
+    }
+
+    public function testDataIsProperlyValidatedAndFiltered(): void
+    {
+        $this->setupArticleData();
+
+        $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
+        $itemLister                    = new ItemListerFilesystem(
+            vfsStream::url('root/posts'),
+            new Parser(),
+            $blogArticleInputFilterFactory(),
+            null,
         );
 
         $articles = $itemLister->getArticles();
-        $this->assertCount(4, $articles);
+        $this->assertCount(6, $articles);
     }
 }

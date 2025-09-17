@@ -13,7 +13,7 @@ use function sprintf;
 
 trait DataTrait
 {
-  /** @var array<string,array<string,string>> */
+    /** @var array<string,array<string,string>> */
     private array $structure;
 
     public function setupArticleData(): void
@@ -28,6 +28,11 @@ trait DataTrait
             file_get_contents(__DIR__ . '/../_data/posts/item-0004.md'),
             (new DateTime())->add(new DateInterval('P5D'))->format('d.m.Y')
         );
+        $item005Content = sprintf(
+            file_get_contents(__DIR__ . '/../_data/posts/item-0005.md'),
+            (new DateTime())->sub(new DateInterval('P1D'))->format('d.m.Y')
+        );
+        $item006Content = file_get_contents(__DIR__ . '/../_data/posts/item-0001.md');
 
         $this->structure = [
             'posts' => [
@@ -35,6 +40,8 @@ trait DataTrait
                 'item-0002.md' => $item002Content,
                 'item-0003.md' => $item003Content,
                 'item-0004.md' => $item004Content,
+                'item-0005.md' => $item005Content,
+                'item-0006.md' => $item006Content,
             ],
         ];
         vfsStream::setup('root', null, $this->structure);
