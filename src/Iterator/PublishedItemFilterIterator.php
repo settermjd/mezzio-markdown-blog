@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Settermjd\MarkdownBlog\Iterator;
 
-use Countable;
 use DateTime;
 use Exception;
 use FilterIterator;
 use Iterator;
 use Settermjd\MarkdownBlog\Entity\BlogArticle;
-
-use function iterator_count;
 
 /**
  * @template TKey of int
@@ -19,7 +16,7 @@ use function iterator_count;
  * @template TIterator of Iterator
  * @template-extends FilterIterator<TKey,TValue,TIterator>
  */
-final class PublishedItemFilterIterator extends FilterIterator implements Countable
+final class PublishedItemFilterIterator extends FilterIterator
 {
     public function __construct(Iterator $iterator)
     {
@@ -37,10 +34,5 @@ final class PublishedItemFilterIterator extends FilterIterator implements Counta
         $episode = $this->getInnerIterator()->current();
 
         return $episode->getPublishDate() <= new DateTime();
-    }
-
-    public function count(): int
-    {
-        return iterator_count($this->getInnerIterator());
     }
 }
