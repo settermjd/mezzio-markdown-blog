@@ -6,6 +6,9 @@ namespace Settermjd\MarkdownBlogTest\Unit\Iterator;
 
 use ArrayIterator;
 use Mni\FrontYAML\Parser;
+use Monolog\Handler\StreamHandler;
+use Monolog\Level;
+use Monolog\Logger;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -30,9 +33,11 @@ final class FilterPostByTagIteratorTest extends TestCase
         $itemLister                    = new ItemListerFilesystem(
             vfsStream::url('root/posts'),
             new Parser(),
-            $blogArticleInputFilterFactory()
+            $blogArticleInputFilterFactory(),
+            logger: (new Logger('debug'))->pushHandler(new StreamHandler('/tmp/test.debug.log', Level::Debug)),
         );
-        $posts                         = new FilterPostByTagIterator(
+
+        $posts = new FilterPostByTagIterator(
             new ArrayIterator($itemLister->getArticles()),
             $tag
         );

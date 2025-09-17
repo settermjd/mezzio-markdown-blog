@@ -47,9 +47,14 @@ final class BlogIndexPageTest extends TestCase
 
         /** @var BlogArticleHandler $handler */
         $handler  = $this->container->get(BlogArticleHandler::class);
-        $response = $handler->handle($this->createConfiguredMock(ServerRequestInterface::class, [
-            'getAttribute' => 'blogArticle-0011',
-        ]));
+        $response = $handler->handle(
+            $this->createConfiguredMock(
+                ServerRequestInterface::class,
+                [
+                    'getAttribute' => 'blogArticle-0011',
+                ]
+            )
+        );
 
         self::assertInstanceOf(HtmlResponse::class, $response);
         $body    = $response->getBody()->getContents();
