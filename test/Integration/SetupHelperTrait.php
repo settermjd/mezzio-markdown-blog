@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Settermjd\MarkdownBlogTest\Integration;
 
 use Laminas\ConfigAggregator\ConfigAggregator;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\ServiceManager;
-use Laminas\View\HelperPluginManager;
-use Mezzio\LaminasView\ConfigProvider;
+use Mezzio\ConfigProvider;
 use Settermjd\MarkdownBlog\ViewLayer\LaminasView\Helpers\MarkdownToHtml;
 
 trait SetupHelperTrait
@@ -16,21 +16,18 @@ trait SetupHelperTrait
 
     public function setupContainer(ViewLayer $viewLayer = ViewLayer::Twig)
     {
-        $viewRenderer = match ($viewLayer) {
-            ViewLayer::LaminasView => ConfigProvider::class,
-            ViewLayer::Plates => \Mezzio\Plates\ConfigProvider::class,
-            ViewLayer::Twig => \Mezzio\Twig\ConfigProvider::class,
-        };
-
-        $configuration    = [
-            \Mezzio\ConfigProvider::class,
+        $configuration = [
+            ConfigProvider::class,
             \Mezzio\Helper\ConfigProvider::class,
             \Mezzio\Router\ConfigProvider::class,
             \Mezzio\Router\FastRouteRouter\ConfigProvider::class,
-            $viewRenderer,
+            match ($viewLayer) {
+                ViewLayer::LaminasView => \Mezzio\LaminasView\ConfigProvider::class,
+                ViewLayer::Plates => \Mezzio\Plates\ConfigProvider::class,
+                ViewLayer::Twig => \Mezzio\Twig\ConfigProvider::class,
+            },
             \Settermjd\MarkdownBlog\ConfigProvider::class,
-            new class ($viewLayer)
-            {
+            new class ($viewLayer) {
                 public function __construct(private readonly ViewLayer $viewLayer)
                 {
                 }
@@ -38,11 +35,19 @@ trait SetupHelperTrait
                 public function __invoke(): array
                 {
                     return [
-                        'templates' => [
+                        'templates'    => [
                             'paths' => [
                                 'app'    => [__DIR__ . '/../_data/templates/app'],
                                 'error'  => [__DIR__ . '/../_data/templates/error'],
                                 'layout' => [__DIR__ . "/../_data/templates/layout/{$this->viewLayer->value}"],
+                            ],
+                        ],
+                        'view_helpers' => [
+                            'aliases'   => [
+                                'markdown_to_html' => MarkdownToHtml::class,
+                            ],
+                            'factories' => [
+                                MarkdownToHtml::class => InvokableFactory::class,
                             ],
                         ],
                     ];
@@ -57,8 +62,5 @@ trait SetupHelperTrait
         $dependencies['services']['config']['blog']['path'] = __DIR__ . '/../_data/posts';
 
         $this->container = new ServiceManager($dependencies);
-
-        $helpers = $this->container->get(HelperPluginManager::class);
-        $helpers->setService('markdown_to_html', new MarkdownToHtml());
     }
 }
