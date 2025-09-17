@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Settermjd\MarkdownBlog\Items\Adapter;
 
+use ArrayIterator;
 use DirectoryIterator;
+use Iterator;
 use Laminas\Hydrator\ArraySerializableHydrator;
 use Laminas\InputFilter\InputFilterInterface;
 use Mni\FrontYAML\Document;
@@ -14,6 +16,7 @@ use Psr\SimpleCache\CacheInterface;
 use Settermjd\MarkdownBlog\Entity\BlogArticle;
 use Settermjd\MarkdownBlog\Items\ItemListerInterface;
 use Settermjd\MarkdownBlog\Iterator\MarkdownFileFilterIterator;
+use Settermjd\MarkdownBlog\Iterator\RelatedPostsFilterIterator;
 use SplFileInfo;
 
 use function array_merge;
@@ -28,6 +31,7 @@ final class ItemListerFilesystem implements ItemListerInterface
     public const CACHE_KEY_SUFFIX_ALL      = 'all';
     public const CACHE_KEY_SUFFIX_UPCOMING = 'upcoming';
     public const CACHE_KEY_SUFFIX_PAST     = 'past';
+    public const CACHE_KEY_SUFFIX_RELATED  = 'related';
 
     protected MarkdownFileFilterIterator $episodeIterator;
 
@@ -66,6 +70,17 @@ final class ItemListerFilesystem implements ItemListerInterface
         }
 
         return $this->buildArticlesList();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRelatedArticles(BlogArticle $blogArticle): Iterator
+    {
+        return new RelatedPostsFilterIterator(
+            new ArrayIterator($this->getArticles()),
+            $blogArticle
+        );
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Settermjd\MarkdownBlog\Items;
 
+use Iterator;
 use Settermjd\MarkdownBlog\Entity\BlogArticle;
 
 /**
@@ -17,6 +18,11 @@ interface ItemListerInterface
      * @return array<int,BlogArticle>
      */
     public function getArticles(): array;
+
+    /**
+     * Returns an array of BlogArticles that are related to the supplied one
+     */
+    public function getRelatedArticles(BlogArticle $blogArticle): Iterator;
 
     /**
      * Returns a single article matching the slug provided
