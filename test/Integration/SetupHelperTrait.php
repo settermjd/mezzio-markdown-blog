@@ -8,6 +8,7 @@ use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\ServiceManager;
 use Mezzio\ConfigProvider;
+use Settermjd\MarkdownBlog\ViewLayer;
 use Settermjd\MarkdownBlog\ViewLayer\LaminasView\Helpers\MarkdownToHtml;
 
 trait SetupHelperTrait

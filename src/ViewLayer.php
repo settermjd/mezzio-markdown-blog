@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Settermjd\MarkdownBlogTest\Integration;
+namespace Settermjd\MarkdownBlog;
 
 enum ViewLayer: string
 {
