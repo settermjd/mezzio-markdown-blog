@@ -35,6 +35,7 @@ final readonly class BlogIndexHandler implements RequestHandlerInterface
     public function __construct(
         private TemplateRendererInterface $renderer,
         private ItemListerInterface $itemLister,
+        // Setting this to null would/could disable pagination
         private int|null $recordsPerPage = self::RECORDS_PER_PAGE
     ) {
     }
