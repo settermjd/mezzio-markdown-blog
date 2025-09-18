@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Settermjd\MarkdownBlog\Handler\BlogArticleHandler;
 use Settermjd\MarkdownBlog\Handler\BlogIndexHandler;
+use Settermjd\MarkdownBlog\ViewLayer;
 use Symfony\Component\DomCrawler\Crawler;
 
 final class BlogIndexPageTest extends TestCase

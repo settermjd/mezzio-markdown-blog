@@ -15,7 +15,7 @@ use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use Settermjd\MarkdownBlog\Items\ItemListerFactory;
 use Settermjd\MarkdownBlog\Items\ItemListerInterface;
 use Settermjd\MarkdownBlog\ViewLayer\Plates\Extensions\MarkdownToHtml;
-use Settermjd\MarkdownBlogTest\Integration\ViewLayer;
+use Settermjd\MarkdownBlog\ViewLayer;
 use Twig\Extra\Intl\IntlExtension;
 use Twig\Extra\Markdown\DefaultMarkdown;
 use Twig\Extra\Markdown\MarkdownExtension;
