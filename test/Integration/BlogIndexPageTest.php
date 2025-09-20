@@ -35,9 +35,10 @@ final class BlogIndexPageTest extends TestCase
         /** @var ServerRequestInterface $request */
         $request  = $this->container->get(ServerRequestInterface::class)();
         $response = $handler->handle(
-            $request->withQueryParams([
-                'current' => $pageNumber,
-            ])
+            $request->withAttribute(
+                'current',
+                $pageNumber,
+            )
         );
 
         self::assertInstanceOf(HtmlResponse::class, $response);
