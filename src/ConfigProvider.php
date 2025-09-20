@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Settermjd\MarkdownBlog;
 
+use App\Handler\BlogIndexHandlerFactory;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
 use Mezzio\Application;
@@ -14,8 +15,8 @@ use Settermjd\MarkdownBlog\Handler\BlogIndexHandler;
 use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use Settermjd\MarkdownBlog\Items\ItemListerFactory;
 use Settermjd\MarkdownBlog\Items\ItemListerInterface;
-use Settermjd\MarkdownBlog\ViewLayer\Plates\Extensions\MarkdownToHtml;
 use Settermjd\MarkdownBlog\ViewLayer;
+use Settermjd\MarkdownBlog\ViewLayer\Plates\Extensions\MarkdownToHtml;
 use Twig\Extra\Intl\IntlExtension;
 use Twig\Extra\Markdown\DefaultMarkdown;
 use Twig\Extra\Markdown\MarkdownExtension;
@@ -70,8 +71,9 @@ final class ConfigProvider
                 ],
             ],
             'factories'          => [
-                ItemListerInterface::class  => ItemListerFactory::class,
+                BlogIndexHandler::class     => BlogIndexHandlerFactory::class,
                 InputFilterInterface::class => BlogArticleInputFilterFactory::class,
+                ItemListerInterface::class  => ItemListerFactory::class,
             ],
         ];
     }
