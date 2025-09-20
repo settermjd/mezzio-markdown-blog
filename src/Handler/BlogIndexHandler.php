@@ -47,8 +47,6 @@ final readonly class BlogIndexHandler implements RequestHandlerInterface
         $allArticles = $this->itemLister->getArticles();
         usort($allArticles, new SortByReverseDateOrder());
 
-        $currentPage = $request->getQueryParams()['current'] ?? 1;
-
         $publishedArticles = new PublishedItemFilterIterator(
             new ArrayIterator($allArticles)
         );
@@ -57,7 +55,8 @@ final readonly class BlogIndexHandler implements RequestHandlerInterface
             ? self::DEFAULT_PAGE
             : (int) ceil(iterator_count($publishedArticles) / $this->itemsPerPage);
 
-        $data = [
+        $currentPage = (int) $request->getAttribute('current', 1);
+        $data        = [
             'articles'  => new LimitIterator(
                 $publishedArticles,
                 offset: $this->getItemLimitOffset($currentPage, $this->itemsPerPage),

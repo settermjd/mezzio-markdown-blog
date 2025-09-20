@@ -61,10 +61,9 @@ class BlogIndexHandlerTest extends TestCase
         $request = $this->createMock(ServerRequestInterface::class);
         $request
             ->expects($this->once())
-            ->method("getQueryParams")
-            ->willReturn([
-                "current" => $currentPage,
-            ]);
+            ->method("getAttribute")
+            ->with('current', 1)
+            ->willReturn($currentPage);
 
         $handler = new BlogIndexHandler($template, $itemLister);
 
@@ -203,10 +202,9 @@ class BlogIndexHandlerTest extends TestCase
         $request = $this->createMock(ServerRequestInterface::class);
         $request
             ->expects($this->once())
-            ->method("getQueryParams")
-            ->willReturn([
-                "current" => $currentPage,
-            ]);
+            ->method("getAttribute")
+            ->with('current', 1)
+            ->willReturn($currentPage);
 
         $handler  = new BlogIndexHandler($template, $itemLister);
         $response = $handler->handle($request);
