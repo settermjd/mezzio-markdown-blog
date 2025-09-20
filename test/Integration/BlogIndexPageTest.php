@@ -17,24 +17,35 @@ final class BlogIndexPageTest extends TestCase
 {
     use SetupHelperTrait;
 
-    #[TestWith([ViewLayer::LaminasView])]
-    #[TestWith([ViewLayer::Plates])]
-    #[TestWith([ViewLayer::Twig])]
-    public function testCanRenderTheBlogIndexRouteWhenPostsAreAvailable(ViewLayer $viewLayer): void
-    {
+    #[TestWith([ViewLayer::LaminasView, 1, 10])]
+    #[TestWith([ViewLayer::LaminasView, 2, 3])]
+    #[TestWith([ViewLayer::Plates, 1, 10])]
+    #[TestWith([ViewLayer::Twig, 1, 10])]
+    public function testCanRenderTheBlogIndexRouteWhenPostsAreAvailable(
+        ViewLayer $viewLayer,
+        int $pageNumber,
+        int $blogItemCount
+    ): void {
         $_ENV['TEMPLATE_LAYER'] = $viewLayer->value;
 
         $this->setupContainer($viewLayer);
 
         /** @var BlogIndexHandler $handler */
-        $handler  = $this->container->get(BlogIndexHandler::class);
-        $response = $handler->handle($this->container->get(ServerRequestInterface::class)());
+        $handler = $this->container->get(BlogIndexHandler::class);
+        /** @var ServerRequestInterface $request */
+        $request  = $this->container->get(ServerRequestInterface::class)();
+        $response = $handler->handle(
+            $request->withQueryParams([
+                'current' => $pageNumber,
+            ])
+        );
 
         self::assertInstanceOf(HtmlResponse::class, $response);
-        $body       = $response->getBody()->getContents();
-        $crawler    = new Crawler($body);
+        $body    = $response->getBody()->getContents();
+        $crawler = new Crawler($body);
+
         $subCrawler = $crawler->filterXPath('//div[@id="blog-items"]/div');
-        self::assertCount(2, $subCrawler);
+        self::assertCount($blogItemCount, $subCrawler);
     }
 
     #[TestWith([ViewLayer::LaminasView], "Test rendering a blog article using the laminas-view template renderer")]

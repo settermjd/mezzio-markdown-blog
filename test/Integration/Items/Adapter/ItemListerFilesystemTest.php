@@ -22,6 +22,6 @@ final class ItemListerFilesystemTest extends TestCase
         /** @var ItemListerInterface $lister */
         $lister = $this->container->get(ItemListerInterface::class);
 
-        self::assertCount(2, $lister->getArticles());
+        self::assertCount(14, $lister->getArticles());
     }
 }

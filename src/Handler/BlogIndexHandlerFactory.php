@@ -16,7 +16,7 @@ class BlogIndexHandlerFactory
         return new BlogIndexHandler(
             $container->get(TemplateRendererInterface::class),
             $container->get(ItemListerInterface::class),
-            $container->get("config")['blog']['records_per_page']
+            $container->get("config")['blog']['items_per_page']
         );
     }
 }
