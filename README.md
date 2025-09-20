@@ -5,18 +5,21 @@ This is a basic blog module for Mezzio applications, allowing you to get up and 
 
 ## How it works
 
-When installed, the module adds two routes to the application's routing table:
+When installed, the module adds two routes to the application's routing table.
 
-- **One to list all of the available blog items.**
-  Using the path `/blog[/{current:\d+}]`, by default it lists the first page of the blog index.
-  However, if a page number is supplied `current`, then that page of the blog will be displayed.
-  Alternatively, the user can move forward and backward through pages of the blog by using the pagination links at the bottom of the current page.
-  It converts a series of Markdown files with Yaml front-matter into an array of `BlogArticle` entities, which are then rendered as HTML.
+### One to list all of the available blog items
 
-- **One to view individual blog items.**
-  Using the path `/blog/item/{slug}`, this route displays a blog item with the slug provided.
-  In addition to being able to view the matching blog item, a listing of one or more blog items that are related to the current item are also available, if any matches are available.
+Using the path `/blog[/{current:\d+}]`, by default it lists the first page of the blog index.
+However, if a page number is supplied `current`, then that page of the blog will be displayed.
+Alternatively, the user can move forward and backward through pages of the blog by using the pagination links at the bottom of the current page.
+It converts a series of Markdown files with Yaml front-matter into an array of `BlogArticle` entities, which are then rendered as HTML.
 
+### One to view individual blog items
+
+Using the path `/blog/item/{slug}`, this route displays a blog item with the slug provided.
+In addition to being able to view the matching blog item, a listing of one or more blog items that are related to the current item are also available, if any matches are available.
+
+### What do the Markdown files look like?
 
 Here is a sample article, so that you know, roughly, what to expect.
 
@@ -54,7 +57,7 @@ To install the package, use Composer (just as you would install any other packag
 composer require settermjd/mezzio-markdown-blog
 ```
 
-During installation, the project's `ConfigProvider` will be loaded into `config/config.php`, loading all of the required dependencies, routes, and template paths.
+During installation, the project's `ConfigProvider` will be loaded into _config/config.php_, loading all of the required dependencies, routes, and template paths.
 Given that, most of the work is done for you, including registering the routes and accompanying handlers for:
 
 - **Listing all blog articles** (the blog index page) – with pagination.
@@ -62,16 +65,6 @@ Given that, most of the work is done for you, including registering the routes a
 - **Viewing individual blog articles.**
   The route is `/blog/article/{slug}`.
 
-### Complete the installation
-
-Now, there are two things that you need to do:
-
-- [Set up the articles directory](#install-step-two)
-- [Override the default templates](#install-step-three)
-
-<!-- markdownlint-disable MD033 -->
-<a name="install-step-two"></a>
-<!-- markdownlint-enable MD033 -->
 ### Set up the articles directory
 
 There is no way to create the articles (posts) directory as part of the installation process, so you need to do this yourself.
@@ -81,9 +74,6 @@ The path needs to match the `path` element that you set in the application's con
 > [!NOTE]
 > In a future version, there will be tooling to automate this.
 
-<!-- markdownlint-disable MD033 -->
-<a name="install-step-three"></a>
-<!-- markdownlint-enable MD033 -->
 ### Override the default templates
 
 The next thing that you need to do is to override the blog templates.
@@ -110,6 +100,7 @@ The three templates are:
 ### Update the application's configuration (_optional_)
 
 If you want or need to, you can also update the module's configuration as well.
+
 By default, its configuration is set in `Settermjd\MarkdownBlog\ConfigProvider`.
 However, you can override this by copying the default configuration file, _config/autoload/blog.local.php_ to the application's _config/autoload_ directory.
 You can find documentation for each option in both the config file and in `Settermjd\MarkdownBlog\ConfigProvider`.
