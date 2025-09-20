@@ -1,3 +1,5 @@
+![PHP QA Workflow](https://github.com/settermjd/mezzio-markdown-blog/actions/workflows/php-qa.yml/badge.svg)
+
 <!-- markdownlint-disable MD013 -->
 # Mezzio Markdown Blog
 
