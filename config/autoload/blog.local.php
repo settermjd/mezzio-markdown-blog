@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Mni\FrontYAML\Parser;
+use Settermjd\MarkdownBlog\Handler\BlogIndexHandler;
 
 return [
     // This provides the configuration for the blog
@@ -21,6 +22,13 @@ return [
          * can be used.
          */
         'path' => __DIR__ . '/../../../' . $_ENV['BLOG_POSTS_DIR'] ?? __DIR__ . '/../../../data/posts',
+
+        /**
+         * 'items_per_page' sets the maximum number of blog items to render on each
+         * page of records. This amount will be rendered, if there are enough records
+         * to render that many, either in total, or for that page of records.
+         */
+        'items_per_page' => $_ENV['BLOG_ITEMS_PER_PAGE'] ?? BlogIndexHandler::ITEMS_PER_PAGE,
 
         /**
          * 'parser' is the class to use to parse the Markdown file's YAML front-matter.
