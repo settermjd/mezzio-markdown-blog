@@ -6,6 +6,7 @@ namespace Settermjd\MarkdownBlogTest\Unit\Handler;
 
 use ArrayIterator;
 use Laminas\Diactoros\Response\HtmlResponse;
+use LimitIterator;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -26,8 +27,15 @@ class BlogIndexHandlerTest extends TestCase
         bool $previous,
         bool $next
     ) {
-        $publishedArticles = new PublishedItemFilterIterator(new ArrayIterator($articles));
-        $data              = [
+        $publishedArticles = new LimitIterator(
+            new PublishedItemFilterIterator(
+                new ArrayIterator($articles)
+            ),
+            $currentPage === 1 ? 0 : $currentPage * 10,
+            10,
+        );
+
+        $data = [
             'articles'  => $publishedArticles,
             'current'   => $currentPage,
             'pageCount' => $pageCount,
@@ -165,14 +173,14 @@ class BlogIndexHandlerTest extends TestCase
         ];
     }
 
-    public function testDoesNotRendertutorialsWhenNoneAreAvailable()
+    public function testDoesNotRenderBlogItemsWhenNoneAreAvailable()
     {
         $currentPage = 1;
 
         $data = [
-            'articles'  => new PublishedItemFilterIterator(new ArrayIterator([])),
+            'articles'  => new LimitIterator(new PublishedItemFilterIterator(new ArrayIterator([]))),
             'current'   => $currentPage,
-            'pageCount' => 0,
+            'pageCount' => 1,
             'previous'  => false,
             'next'      => false,
         ];
@@ -200,8 +208,7 @@ class BlogIndexHandlerTest extends TestCase
                 "current" => $currentPage,
             ]);
 
-        $handler = new BlogIndexHandler($template, $itemLister);
-
+        $handler  = new BlogIndexHandler($template, $itemLister);
         $response = $handler->handle($request);
 
         $this->assertInstanceOf(HtmlResponse::class, $response);

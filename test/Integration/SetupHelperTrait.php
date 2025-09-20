@@ -15,8 +15,10 @@ trait SetupHelperTrait
 {
     private ServiceManager $container;
 
-    public function setupContainer(ViewLayer $viewLayer = ViewLayer::Twig)
-    {
+    public function setupContainer(
+        ViewLayer $viewLayer = ViewLayer::Twig,
+        int $blogItemsPerPage = 10,
+    ) {
         $configuration = [
             ConfigProvider::class,
             \Mezzio\Helper\ConfigProvider::class,
@@ -58,9 +60,10 @@ trait SetupHelperTrait
         $configAggregator = new ConfigAggregator($configuration);
         $config           = $configAggregator->getMergedConfig();
 
-        $dependencies                                       = $config['dependencies'];
-        $dependencies['services']['config']                 = $config;
-        $dependencies['services']['config']['blog']['path'] = __DIR__ . '/../_data/posts';
+        $dependencies                                                 = $config['dependencies'];
+        $dependencies['services']['config']                           = $config;
+        $dependencies['services']['config']['blog']['path']           = __DIR__ . '/../_data/posts';
+        $dependencies['services']['config']['blog']['items_per_page'] = $blogItemsPerPage;
 
         $this->container = new ServiceManager($dependencies);
     }
