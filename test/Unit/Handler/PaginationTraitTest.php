@@ -31,4 +31,28 @@ class PaginationTraitTest extends TestCase
     ): void {
         $this->assertSame($expectedOffset, $this->getItemLimitOffset($currentPage, $itemsPerPage));
     }
+
+    #[TestWith([1, 10, 10, false])]
+    #[TestWith([1, 28, 10, true])]
+    #[TestWith([3, 28, 10, false])]
+    public function testCanDetermineIfNextPageExistsCorrectly(
+        int $currentPage,
+        int $totalItems,
+        int $itemsPerPage,
+        bool $hasNextPage
+    ): void {
+        $this->assertSame($hasNextPage, $this->hasNextPage($currentPage, $totalItems, $itemsPerPage));
+    }
+
+    #[TestWith([1, false])]
+    #[TestWith([1, false])]
+    #[TestWith([2, true])]
+    #[TestWith([3, true])]
+    #[TestWith([1, false])]
+    public function testCanDetermineIfPreviousPageExistsCorrectly(
+        int $currentPage,
+        bool $hasPreviousPage,
+    ): void {
+        $this->assertSame($hasPreviousPage, $this->hasPreviousPage($currentPage));
+    }
 }

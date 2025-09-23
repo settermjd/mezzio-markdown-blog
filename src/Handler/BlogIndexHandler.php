@@ -16,6 +16,7 @@ use Settermjd\MarkdownBlog\Iterator\PublishedItemFilterIterator;
 use Settermjd\MarkdownBlog\Sorter\SortByReverseDateOrder;
 
 use function ceil;
+use function count;
 use function iterator_count;
 use function usort;
 
@@ -64,9 +65,15 @@ final readonly class BlogIndexHandler implements RequestHandlerInterface
             ),
             'current'   => $currentPage,
             'pageCount' => $pageCount,
-            'previous'  => $currentPage > self::DEFAULT_PAGE,
-            'next'      => $currentPage < $pageCount,
         ];
+
+        if ($currentPage > self::DEFAULT_PAGE) {
+            $data['previous'] = $currentPage - 1;
+        }
+
+        if ($this->hasNextPage($currentPage, count($allArticles), $this->itemsPerPage)) {
+            $data['next'] = $currentPage + 1;
+        }
 
         return new HtmlResponse($this->renderer->render('blog::blog', $data));
     }

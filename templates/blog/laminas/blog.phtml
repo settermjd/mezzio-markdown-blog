@@ -34,5 +34,21 @@
                 </div>
             <?php endforeach ?>
         </div>
+        <?php
+        $data = [
+            'current' => $current,
+            'pageCount' => $pageCount,
+        ];
+        if (isset($previous)) {
+            $data['previous'] = $previous;
+        }
+        if (isset($page)) {
+            $data['page'] = $page;
+        }
+        if (isset($next)) {
+            $data['next'] = $next;
+        }
+        ?>
+        <?= $this->partial('blog::includes/pagination', $data); ?>
     <?php endif ?>
 </div>

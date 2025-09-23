@@ -24,8 +24,8 @@ class BlogIndexHandlerTest extends TestCase
         array $articles,
         int $currentPage,
         int $pageCount,
-        bool $previous,
-        bool $next
+        int|null $previous = null,
+        int|null $next = null
     ) {
         $publishedArticles = new LimitIterator(
             new PublishedItemFilterIterator(
@@ -39,9 +39,15 @@ class BlogIndexHandlerTest extends TestCase
             'articles'  => $publishedArticles,
             'current'   => $currentPage,
             'pageCount' => $pageCount,
-            'previous'  => $previous,
-            'next'      => $next,
         ];
+
+        if ($previous !== null) {
+            $data['previous'] = $previous;
+        }
+
+        if ($next !== null) {
+            $data['next'] = $next;
+        }
 
         /** @var TemplateRendererInterface&MockObject $template */
         $template = $this->createMock(TemplateRendererInterface::class);
@@ -89,8 +95,6 @@ class BlogIndexHandlerTest extends TestCase
                 ],
                 1,
                 1,
-                false,
-                false,
             ],
             "On the second of two pages of blog items, showing one item per page, with the ability to go back to the previous page" => [
                 [
@@ -127,8 +131,7 @@ class BlogIndexHandlerTest extends TestCase
                 ],
                 2,
                 1,
-                true,
-                false,
+                1,
             ],
             // phpcs:enable Generic.Files.LineLength
             "On the first page of one page of blog items with a total of one blog items" => [
@@ -166,8 +169,6 @@ class BlogIndexHandlerTest extends TestCase
                 ],
                 1,
                 1,
-                false,
-                false,
             ],
         ];
     }
@@ -180,8 +181,6 @@ class BlogIndexHandlerTest extends TestCase
             'articles'  => new LimitIterator(new PublishedItemFilterIterator(new ArrayIterator([]))),
             'current'   => $currentPage,
             'pageCount' => 1,
-            'previous'  => false,
-            'next'      => false,
         ];
 
         /** @var ItemListerInterface&MockObject $itemLister */

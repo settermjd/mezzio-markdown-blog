@@ -1,21 +1,21 @@
 <?php if (isset($this->pageCount) && $this->pageCount > 1): ?>
-    <nav>
+    <nav id="navigation">
         <ul>
             <!-- Previous page link -->
             <?php if (isset($this->previous) && ! empty($this->previous)): ?>
-                <li>
-                    <a>&Larr;</a>
+                <li id="prev">
+                    <a href="/blog/<?= $this->escapeHtml($previous) ?>">&Larr;</a>
                 </li>
             <?php endif ?>
 
             <!-- Numbered page links -->
             <?php foreach (range(1, $this->pageCount) as $page): ?>
                 <?php if ($page === $current): ?>
-                    <li>
+                    <li id="page-<?= $this->escapeHtml($page) ?>">
                         <a><?= $this->escapeHtml($page) ?></a>
                     </li>
                 <?php else: ?>
-                    <li>
+                    <li id="current-page">
                         <span><?= $this->escapeHtml($page) ?></span>
                     </li>
                 <?php endif ?>
@@ -23,8 +23,8 @@
 
             <!-- Next page link -->
             <?php if (isset($this->next) && ! empty($this->next)): ?>
-                <li>
-                    <a>&Rarr;</a>
+                <li id="next">
+                    <a href="/blog/<?= $this->escapeHtml($next) ?>">&Rarr;</a>
                 </li>
             <?php endif ?>
         </ul>
