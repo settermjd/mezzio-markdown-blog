@@ -17,14 +17,18 @@ final class BlogIndexPageTest extends TestCase
 {
     use SetupHelperTrait;
 
-    #[TestWith([ViewLayer::LaminasView, 1, 10])]
-    #[TestWith([ViewLayer::LaminasView, 2, 3])]
-    #[TestWith([ViewLayer::Plates, 1, 10])]
-    #[TestWith([ViewLayer::Twig, 1, 10])]
+    #[TestWith([ViewLayer::Twig, 1, 10, false, true])]
+    #[TestWith([ViewLayer::Twig, 2, 3, true, false])]
+    #[TestWith([ViewLayer::Plates, 1, 10, false, true])]
+    #[TestWith([ViewLayer::Plates, 2, 3, true, false])]
+    #[TestWith([ViewLayer::LaminasView, 1, 10, false, true])]
+    #[TestWith([ViewLayer::LaminasView, 2, 3, true, false])]
     public function testCanRenderTheBlogIndexRouteWhenPostsAreAvailable(
         ViewLayer $viewLayer,
         int $pageNumber,
-        int $blogItemCount
+        int $blogItemCount,
+        bool $hasPrevious,
+        bool $hasNext,
     ): void {
         $_ENV['TEMPLATE_LAYER'] = $viewLayer->value;
 
@@ -47,6 +51,16 @@ final class BlogIndexPageTest extends TestCase
 
         $subCrawler = $crawler->filterXPath('//div[@id="blog-items"]/div');
         self::assertCount($blogItemCount, $subCrawler);
+
+        if ($hasPrevious) {
+            $subCrawler = $crawler->filterXPath('//li[@id="prev"]');
+            self::assertCount(1, $subCrawler);
+        }
+
+        if ($hasNext) {
+            $subCrawler = $crawler->filterXPath('//li[@id="next"]');
+            self::assertCount(1, $subCrawler);
+        }
     }
 
     #[TestWith([ViewLayer::LaminasView], "Test rendering a blog article using the laminas-view template renderer")]
