@@ -41,6 +41,7 @@ final class ConfigProvider
     public function __invoke(): array
     {
         return [
+            // The default blog configuration
             'blog'         => $this->getBlogConfig(),
             'dependencies' => $this->getDependencies(),
             'routes'       => $this->getRoutes(),
@@ -147,7 +148,7 @@ final class ConfigProvider
              * files from. This directory needs to be manually initialised before it
              * can be used.
              */
-            'path' => __DIR__ . '/../../../' . $path,
+            'path' => __DIR__ . '/../../' . $path,
 
             /**
              * 'parser' is the class to use to parse the Markdown file's YAML front-matter.
