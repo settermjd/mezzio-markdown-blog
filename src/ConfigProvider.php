@@ -15,13 +15,11 @@ use Settermjd\MarkdownBlog\Handler\BlogIndexHandler;
 use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use Settermjd\MarkdownBlog\Items\ItemListerFactory;
 use Settermjd\MarkdownBlog\Items\ItemListerInterface;
+use Settermjd\MarkdownBlog\RuntimeLoader\MarkdownRuntimeLoader;
 use Settermjd\MarkdownBlog\ViewLayer;
 use Settermjd\MarkdownBlog\ViewLayer\Plates\Extensions\MarkdownToHtml;
 use Twig\Extra\Intl\IntlExtension;
-use Twig\Extra\Markdown\DefaultMarkdown;
 use Twig\Extra\Markdown\MarkdownExtension;
-use Twig\Extra\Markdown\MarkdownRuntime;
-use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 /**
  * The configuration provider for the module
@@ -41,6 +39,7 @@ final class ConfigProvider
     public function __invoke(): array
     {
         return [
+            // The default blog configuration
             'blog'         => $this->getBlogConfig(),
             'dependencies' => $this->getDependencies(),
             'routes'       => $this->getRoutes(),
@@ -147,7 +146,7 @@ final class ConfigProvider
              * files from. This directory needs to be manually initialised before it
              * can be used.
              */
-            'path' => __DIR__ . '/../../../' . $path,
+            'path' => __DIR__ . '/../../' . $path,
 
             /**
              * 'parser' is the class to use to parse the Markdown file's YAML front-matter.
@@ -174,14 +173,7 @@ final class ConfigProvider
                 new MarkdownExtension(),
             ],
             'runtime_loaders' => [
-                new class implements RuntimeLoaderInterface {
-                    public function load(string $class): MarkdownRuntime|null
-                    {
-                        return MarkdownRuntime::class === $class
-                            ? new MarkdownRuntime(new DefaultMarkdown())
-                            : null;
-                    }
-                },
+                new MarkdownRuntimeLoader(),
             ],
         ];
     }
