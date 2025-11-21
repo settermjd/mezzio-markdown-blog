@@ -15,13 +15,11 @@ use Settermjd\MarkdownBlog\Handler\BlogIndexHandler;
 use Settermjd\MarkdownBlog\InputFilter\BlogArticleInputFilterFactory;
 use Settermjd\MarkdownBlog\Items\ItemListerFactory;
 use Settermjd\MarkdownBlog\Items\ItemListerInterface;
+use Settermjd\MarkdownBlog\RuntimeLoader\MarkdownRuntimeLoader;
 use Settermjd\MarkdownBlog\ViewLayer;
 use Settermjd\MarkdownBlog\ViewLayer\Plates\Extensions\MarkdownToHtml;
 use Twig\Extra\Intl\IntlExtension;
-use Twig\Extra\Markdown\DefaultMarkdown;
 use Twig\Extra\Markdown\MarkdownExtension;
-use Twig\Extra\Markdown\MarkdownRuntime;
-use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 /**
  * The configuration provider for the module
@@ -175,14 +173,7 @@ final class ConfigProvider
                 new MarkdownExtension(),
             ],
             'runtime_loaders' => [
-                new class implements RuntimeLoaderInterface {
-                    public function load(string $class): MarkdownRuntime|null
-                    {
-                        return MarkdownRuntime::class === $class
-                            ? new MarkdownRuntime(new DefaultMarkdown())
-                            : null;
-                    }
-                },
+                new MarkdownRuntimeLoader(),
             ],
         ];
     }
