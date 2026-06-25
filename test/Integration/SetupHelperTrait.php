@@ -18,7 +18,7 @@ trait SetupHelperTrait
     public function setupContainer(
         ViewLayer $viewLayer = ViewLayer::Twig,
         int $blogItemsPerPage = 10,
-    ) {
+    ): void {
         $configuration = [
             ConfigProvider::class,
             \Mezzio\Helper\ConfigProvider::class,

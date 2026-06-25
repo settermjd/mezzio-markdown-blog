@@ -17,43 +17,47 @@ final class BlogArticleInputFilterFactoryTest extends TestCase
     {
         $filter = (new BlogArticleInputFilterFactory())();
         $filter->setData($filterData);
-        $this->assertTrue($filter->isValid());
-        $this->assertEmpty($filter->getMessages());
+        self::assertTrue($filter->isValid());
+        self::assertEmpty($filter->getMessages());
 
-        $this->assertSame(
+        self::assertSame(
             $filter->getValue('categories'),
             $expectedResult['categories']
         );
-        $this->assertSame(
+        self::assertSame(
+            $filter->getValue('draft'),
+            $expectedResult['draft'] ?? false,
+        );
+        self::assertSame(
             $filter->getValue('content'),
             $expectedResult['content']
         );
-        $this->assertSame(
+        self::assertSame(
             $filter->getValue('publishDate'),
             $expectedResult['publishDate']
         );
-        $this->assertSame(
+        self::assertSame(
             $filter->getValue('slug'),
             $expectedResult['slug']
         );
-        $this->assertSame(
+        self::assertSame(
             $filter->getValue('synopsis'),
             $expectedResult['synopsis']
         );
-        $this->assertSame(
+        self::assertSame(
             $filter->getValue('title'),
             $expectedResult['title']
         );
 
         if (array_key_exists('image', $expectedResult)) {
-            $this->assertSame(
+            self::assertSame(
                 $filter->getValue('title'),
                 $expectedResult['title']
             );
         }
 
         if (array_key_exists('tags', $expectedResult)) {
-            $this->assertSame(
+            self::assertSame(
                 $filter->getValue('tags'),
                 $expectedResult['tags']
             );
@@ -77,6 +81,7 @@ If you've been following [my journey so far](/tags/golang/), I've been working t
 However, toward the end of the time, before the unexpected break, I felt that it was becoming quite arbitrary to follow that approach.
     This is because the things I was learning weren't tied to a practical project which held any genuine sense of meaning for me.",
                     'image'       => 'learning-golang-day13.png',
+                    'draft'       => true,
                     'publishDate' => '02.04.2023',
                     'slug'        => 'learning-golang/day-13/',
                     'synopsis'    => 'Here we are on day 13. Today, I continued learning Golang by working on the Golang version of my PHP/Python weather station, adding a function to render static pages. Let me share my learnings with you.',
@@ -99,6 +104,7 @@ If you've been following [my journey so far](/tags/golang/), I've been working t
 However, toward the end of the time, before the unexpected break, I felt that it was becoming quite arbitrary to follow that approach.
     This is because the things I was learning weren't tied to a practical project which held any genuine sense of meaning for me.",
                     'image'       => 'learning-golang-day13.png',
+                    'draft'       => true,
                     'publishDate' => '02.04.2023',
                     'slug'        => 'learning-golang/day-13/',
                     'synopsis'    => 'Here we are on day 13. Today, I continued learning Golang by working on the Golang version of my PHP/Python weather station, adding a function to render static pages. Let me share my learnings with you.',

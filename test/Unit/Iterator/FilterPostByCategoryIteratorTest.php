@@ -32,7 +32,7 @@ final class FilterPostByCategoryIteratorTest extends TestCase
             new ArrayIterator($itemLister->getArticles()),
             $category
         );
-        $this->assertCount($postCount, $posts);
+        self::assertCount($postCount, $posts);
     }
 
     /**
@@ -48,7 +48,7 @@ final class FilterPostByCategoryIteratorTest extends TestCase
             ],
             [
                 'Software Development',
-                5,
+                4,
             ],
             [
                 'Public Speaking',

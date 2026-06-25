@@ -35,7 +35,7 @@ final class EpisodeFilterIteratorTest extends TestCase
                 $itemLister->getArticles()
             )
         );
-        $this->assertCount(
+        self::assertCount(
             2,
             $upcomingItems,
             sprintf(
@@ -60,6 +60,6 @@ final class EpisodeFilterIteratorTest extends TestCase
                 $itemLister->getArticles()
             )
         );
-        $this->assertCount(4, $publishedItems, "Incorrect past item count retrieved");
+        self::assertCount(3, $publishedItems, "Incorrect past item count retrieved");
     }
 }

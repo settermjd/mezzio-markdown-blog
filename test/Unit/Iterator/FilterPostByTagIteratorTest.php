@@ -65,7 +65,7 @@ final class FilterPostByTagIteratorTest extends TestCase
             ],
             [
                 'Slim Framework',
-                2,
+                1,
             ],
         ];
     }

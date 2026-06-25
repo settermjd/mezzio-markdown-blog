@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Settermjd\MarkdownBlog\InputFilter;
 
+use Laminas\Filter\Boolean;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripNewlines;
 use Laminas\Filter\StripTags;
@@ -61,6 +62,16 @@ final class BlogArticleInputFilterFactory
             ->attach(new StripNewlines())
             ->attach(new StripTags());
 
+        $draft = new Input('draft');
+        $draft->setAllowEmpty(true);
+        $draft->setRequired(false);
+        $draft
+            ->getFilterChain()
+            ->attach(new StringTrim())
+            ->attach(new StripNewlines())
+            ->attach(new StripTags())
+            ->attach(new Boolean(casting: false));
+
         $title = new Input('title');
         $title
             ->getFilterChain()
@@ -85,6 +96,7 @@ final class BlogArticleInputFilterFactory
         return (new InputFilter())
             ->add($publishDate)
             ->add($slug)
+            ->add($draft)
             ->add($synopsis)
             ->add($title)
             ->add($image)

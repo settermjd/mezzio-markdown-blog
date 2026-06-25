@@ -83,32 +83,30 @@ final class ItemListerFilesystemTest extends TestCase
     {
         $this->setupArticleData();
 
-        $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister                    = new ItemListerFilesystem(
+        $itemLister = new ItemListerFilesystem(
             vfsStream::url('root/posts'),
             new Parser(),
-            $blogArticleInputFilterFactory(),
+            new BlogArticleInputFilterFactory()->__invoke(),
             null,
             null
         );
 
         $articles = $itemLister->getRelatedArticles($itemLister->getArticle($slug));
-        $this->assertCount($expectedArticles, $articles);
+        self::assertCount($expectedArticles, $articles);
     }
 
     public function testDataIsProperlyValidatedAndFiltered(): void
     {
         $this->setupArticleData();
 
-        $blogArticleInputFilterFactory = new BlogArticleInputFilterFactory();
-        $itemLister                    = new ItemListerFilesystem(
+        $itemLister = new ItemListerFilesystem(
             vfsStream::url('root/posts'),
             new Parser(),
-            $blogArticleInputFilterFactory(),
+            new BlogArticleInputFilterFactory()->__invoke(),
             null,
         );
 
         $articles = $itemLister->getArticles();
-        $this->assertCount(6, $articles);
+        $this->assertCount(5, $articles);
     }
 }

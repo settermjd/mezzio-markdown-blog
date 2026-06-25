@@ -14,6 +14,7 @@ use function get_class_vars;
 final class BlogArticle
 {
     private DateTime $publishDate;
+    private bool $draft;
     private string $slug     = '';
     private string $title    = '';
     private string $image    = '';
@@ -33,6 +34,11 @@ final class BlogArticle
     public function __construct(array $options = [])
     {
         $this->populate($options);
+    }
+
+    public function isDraft(): bool
+    {
+        return $this->draft ?? false;
     }
 
     /**

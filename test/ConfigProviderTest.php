@@ -22,7 +22,7 @@ class ConfigProviderTest extends TestCase
         $configProvider = new ConfigProvider();
 
         $dependencies = $configProvider->getDependencies();
-        $this->assertSame(
+        self::assertSame(
             [
                 'abstract_factories',
                 'delegators',
@@ -30,30 +30,30 @@ class ConfigProviderTest extends TestCase
             ],
             array_keys($dependencies),
         );
-        $this->assertContains(
+        self::assertContains(
             ReflectionBasedAbstractFactory::class,
             $dependencies['abstract_factories']
         );
-        $this->assertArrayHasKey(
+        self::assertArrayHasKey(
             ItemListerInterface::class,
             $dependencies['factories'],
         );
-        $this->assertArrayHasKey(
+        self::assertArrayHasKey(
             InputFilterInterface::class,
             $dependencies['factories'],
         );
-        $this->assertArrayHasKey(
+        self::assertArrayHasKey(
             Application::class,
             $dependencies['delegators'],
         );
 
         $routes = $configProvider->getRoutes();
-        $this->assertCount(2, $routes);
+        self::assertCount(2, $routes);
 
         $config = $configProvider();
-        $this->assertArrayHasKey('blog', $config);
-        $this->assertSame('filesystem', $config['blog']['type']);
-        $this->assertTrue(str_ends_with($config['blog']['path'], '/../../../data/posts'));
-        $this->assertSame(Parser::class, $config['blog']['parser']);
+        self::assertArrayHasKey('blog', $config);
+        self::assertSame('filesystem', $config['blog']['type']);
+        self::assertTrue(str_ends_with($config['blog']['path'], '/../../data/posts'));
+        self::assertSame(Parser::class, $config['blog']['parser']);
     }
 }
