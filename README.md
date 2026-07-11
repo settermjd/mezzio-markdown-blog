@@ -1,6 +1,7 @@
 ![PHP QA Workflow](https://github.com/settermjd/mezzio-markdown-blog/actions/workflows/php-qa.yml/badge.svg)
 
 <!-- markdownlint-disable MD013 -->
+
 # Mezzio Markdown Blog
 
 This is a basic blog module for Mezzio applications, allowing you to get up and running with a blog in your applications pretty quickly.

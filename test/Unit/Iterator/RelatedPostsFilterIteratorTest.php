@@ -47,9 +47,9 @@ final class RelatedPostsFilterIteratorTest extends TestCase
             $article
         );
 
-        $this->assertCount($articleCount, $articles);
+        self::assertCount($articleCount, $articles);
         foreach ($articleSlugs as $articleSlug) {
-            $this->assertCount(
+            self::assertCount(
                 1,
                 array_filter(
                     iterator_to_array($articles),
@@ -84,7 +84,7 @@ EOF,
                     'tags'        => ['PHP', 'Docker'],
                     'categories'  => ['Software Development'],
                 ],
-                4,
+                3,
                 [
                     'item-0004',
                 ],

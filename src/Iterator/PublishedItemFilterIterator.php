@@ -31,8 +31,9 @@ final class PublishedItemFilterIterator extends FilterIterator
      */
     public function accept(): bool
     {
+        /** @var BlogArticle $episode */
         $episode = $this->getInnerIterator()->current();
 
-        return $episode->getPublishDate() <= new DateTime();
+        return ($episode->getPublishDate() <= new DateTime()) && ! $episode->isDraft();
     }
 }

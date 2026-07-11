@@ -31,6 +31,6 @@ final class PublishedItemFilterIteratorTest extends TestCase
             new ArrayIterator($itemLister->getArticles())
         );
 
-        $this->assertCount(4, $articles);
+        $this->assertCount(3, $articles);
     }
 }

@@ -18,11 +18,11 @@ final class BlogIndexPageTest extends TestCase
     use SetupHelperTrait;
 
     #[TestWith([ViewLayer::Twig, 1, 10, false, true])]
-    #[TestWith([ViewLayer::Twig, 2, 3, true, false])]
+    #[TestWith([ViewLayer::Twig, 2, 4, true, false])]
     #[TestWith([ViewLayer::Plates, 1, 10, false, true])]
-    #[TestWith([ViewLayer::Plates, 2, 3, true, false])]
+    #[TestWith([ViewLayer::Plates, 2, 4, true, false])]
     #[TestWith([ViewLayer::LaminasView, 1, 10, false, true])]
-    #[TestWith([ViewLayer::LaminasView, 2, 3, true, false])]
+    #[TestWith([ViewLayer::LaminasView, 2, 4, true, false])]
     public function testCanRenderTheBlogIndexRouteWhenPostsAreAvailable(
         ViewLayer $viewLayer,
         int $pageNumber,

@@ -24,18 +24,19 @@ final class BlogArticleTest extends TestCase
         $blogArticle = new BlogArticle();
         $blogArticle->populate($input);
 
-        $this->assertEquals(new DateTime((string) $input['publishDate']), $blogArticle->getPublishDate());
-        $this->assertEquals($output['slug'], $blogArticle->getSlug());
-        $this->assertEquals($output['synopsis'], $blogArticle->getSynopsis());
-        $this->assertEquals($output['title'], $blogArticle->getTitle());
-        $this->assertEquals($output['content'], $blogArticle->getContent());
-        $this->assertEquals($output['image'], $blogArticle->getImage());
-        $this->assertEquals($output['categories'], $blogArticle->getCategories());
-        $this->assertEquals($output['tags'], $blogArticle->getTags());
+        self::assertEquals(new DateTime((string) $input['publishDate']), $blogArticle->getPublishDate());
+        self::assertEquals($output['draft'] ?? false, $blogArticle->isDraft());
+        self::assertEquals($output['slug'], $blogArticle->getSlug());
+        self::assertEquals($output['synopsis'], $blogArticle->getSynopsis());
+        self::assertEquals($output['title'], $blogArticle->getTitle());
+        self::assertEquals($output['content'], $blogArticle->getContent());
+        self::assertEquals($output['image'], $blogArticle->getImage());
+        self::assertEquals($output['categories'], $blogArticle->getCategories());
+        self::assertEquals($output['tags'], $blogArticle->getTags());
     }
 
     /**
-     * @return (string|string[])[][][]
+     * @return array<int, list<array<string, bool|list<string>|string>>>
      */
     public static function blogArticleDataProvider(): array
     {
@@ -43,6 +44,7 @@ final class BlogArticleTest extends TestCase
             [
                 [
                     "publishDate" => "2015-01-01",
+                    "draft"       => true,
                     "slug"        => "blogArticle-001",
                     "title"       => "BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001",
                     "content"     => <<<EOF
@@ -61,6 +63,7 @@ EOF,
                 ],
                 [
                     "publishDate" => "2015-01-01",
+                    "draft"       => true,
                     "slug"        => "blogArticle-001",
                     "title"       => "BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001 BlogArticle 001",
                     "content"     => <<<EOF

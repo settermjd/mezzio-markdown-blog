@@ -32,7 +32,7 @@ trait DataTrait
             file_get_contents(__DIR__ . '/../_data/posts/item-0005.md'),
             (new DateTime())->sub(new DateInterval('P1D'))->format('d.m.Y')
         );
-        $item006Content = file_get_contents(__DIR__ . '/../_data/posts/item-0001.md');
+        $item006Content = file_get_contents(__DIR__ . '/../_data/posts/item-0006.md');
 
         $this->structure = [
             'posts' => [
