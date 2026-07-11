@@ -65,7 +65,7 @@ final class BlogArticleInputFilterFactoryTest extends TestCase
     }
 
     /**
-     * @return (string|string[])[][][]
+     * @return array<int, list<array<string, bool|list<string>|string>>>
      */
     public static function filterDataProvider(): array
     {

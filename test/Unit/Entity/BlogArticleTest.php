@@ -36,7 +36,7 @@ final class BlogArticleTest extends TestCase
     }
 
     /**
-     * @return (string|string[])[][][]
+     * @return array<int, list<array<string, bool|list<string>|string>>>
      */
     public static function blogArticleDataProvider(): array
     {

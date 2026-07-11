@@ -36,8 +36,7 @@ final class FilterPostByCategoryIteratorTest extends TestCase
     }
 
     /**
-     * @return (int|string)[][]
-     * @psalm-return list{list{'Podcasts', 0}, list{'Software Development', 5}, list{'Public Speaking', 0}}
+     * @return list{list{'Podcasts', 0}, list{'Software Development', 4}, list{'Public Speaking', 0}}
      */
     public static function filterByCategoryDataProvider(): array
     {

@@ -46,7 +46,7 @@ final class FilterPostByTagIteratorTest extends TestCase
 
     /**
      * @return (int|string)[][]
-     * @psalm-return list{list{'Kubernetes', 0}, list{'PHP', 3}, list{'Docker', 1}, list{'Slim Framework', 2}}
+     * @psalm-return list{list{'Kubernetes', 0}, list{'PHP', 3}, list{'Docker', 1}, list{'Slim Framework', 1}}
      */
     public static function filterByTagDataProvider(): array
     {

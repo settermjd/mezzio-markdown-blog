@@ -86,7 +86,7 @@ final class ItemListerFilesystemTest extends TestCase
         $itemLister = new ItemListerFilesystem(
             vfsStream::url('root/posts'),
             new Parser(),
-            new BlogArticleInputFilterFactory()->__invoke(),
+            (new BlogArticleInputFilterFactory())->__invoke(),
             null,
             null
         );
@@ -102,7 +102,7 @@ final class ItemListerFilesystemTest extends TestCase
         $itemLister = new ItemListerFilesystem(
             vfsStream::url('root/posts'),
             new Parser(),
-            new BlogArticleInputFilterFactory()->__invoke(),
+            (new BlogArticleInputFilterFactory())->__invoke(),
             null,
         );
 
